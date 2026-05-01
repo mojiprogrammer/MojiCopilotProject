@@ -16,5 +16,6 @@ namespace Moji.DataService.Models
         public string? BrowserName { get; set; }
         public string? OperatingSystem { get; set; }
         public DateTime CreatedTime { get; set; }
+
     }
 }
