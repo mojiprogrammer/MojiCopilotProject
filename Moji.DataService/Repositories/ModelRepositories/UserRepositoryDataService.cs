@@ -72,18 +72,14 @@ namespace Moji.DataService.Repositories.ModelRepositories
         public async Task<bool> CheckEmailExistsAsync(string email)
         {
             using var connection = _context.CreateConnection();
-            var count = await connection.ExecuteScalarAsync<int>(
-                "SELECT COUNT(1) FROM [dbo].[Users] WHERE [Email] = @Email",
-                new { Email = email });
+            var count = await connection.ExecuteScalarAsync<int>("sp_CheckEmailExists",new { Email = email },commandType: CommandType.StoredProcedure);
             return count > 0;
         }
 
         public async Task<bool> CheckUsernameExistsAsync(string username)
         {
             using var connection = _context.CreateConnection();
-            var count = await connection.ExecuteScalarAsync<int>(
-                "SELECT COUNT(1) FROM [dbo].[Users] WHERE [Username] = @Username",
-                new { Username = username });
+            var count = await connection.ExecuteScalarAsync<int>("sp_CheckUserNameExists",new { Username = username },commandType: CommandType.StoredProcedure);
             return count > 0;
         }
     }
