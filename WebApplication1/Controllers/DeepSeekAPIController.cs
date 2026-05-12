@@ -6,8 +6,6 @@ using System.Text.Json;
 
 namespace Moji.Controllers.Controllers
 {
-
-
     [ApiController]
     [Route("api/[controller]")]
     public class DeepSeekAPIController : ControllerBase
@@ -33,17 +31,23 @@ namespace Moji.Controllers.Controllers
         {
             try
             {
-                var apiKey = _configuration["DeepSeek:sk-505085d3a48c44929c380e8b48fca21d"];
+                var apiKey = _configuration["DeepSeek:DeepSeekApiKey"];
                 if (string.IsNullOrEmpty(apiKey))
                 {
                     return BadRequest(new { error = "API key not configured" });
                 }
 
-                var deepSeekRequest = new DeepSeekRequest
+                var deepSeekRequest = new
                 {
-                    Messages = request.Messages,
-                    Temperature = request.Temperature ?? 0.7,
-                    MaxTokens = request.MaxTokens ?? 2000
+                    model = "deepseek-chat",
+                    messages = request.Messages.Select(m => new
+                    {
+                        role = m.Role.ToLower(),
+                        content = m.Content
+                    }),
+                    temperature = request.Temperature ?? 0.7,
+                    max_tokens = request.MaxTokens ?? 2000,  // Note: snake_case
+                    stream = false
                 };
 
                 _httpClient.DefaultRequestHeaders.Clear();
@@ -52,7 +56,6 @@ namespace Moji.Controllers.Controllers
                 var json = JsonSerializer.Serialize(deepSeekRequest);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                // FIXED: Use proper method signature without HttpCompletionOption
                 var response = await _httpClient.PostAsync("https://api.deepseek.com/v1/chat/completions", content);
                 var responseString = await response.Content.ReadAsStringAsync();
 
@@ -86,7 +89,7 @@ namespace Moji.Controllers.Controllers
 
             try
             {
-                var apiKey = _configuration["DeepSeek:sk-505085d3a48c44929c380e8b48fca21d"];
+                var apiKey = _configuration["DeepSeek:DeepSeekApiKey"];
                 if (string.IsNullOrEmpty(apiKey))
                 {
                     await Response.WriteAsync($"data: {JsonSerializer.Serialize(new { error = "API key not configured" })}\n\n");
@@ -156,7 +159,7 @@ namespace Moji.Controllers.Controllers
 
             try
             {
-                var apiKey = _configuration["DeepSeek:ApiKey"];
+                var apiKey = _configuration["DeepSeek:DeepSeekApiKey"];
                 if (string.IsNullOrEmpty(apiKey))
                 {
                     await Response.WriteAsync($"data: {JsonSerializer.Serialize(new { error = "API key not configured" })}\n\n");
