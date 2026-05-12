@@ -117,7 +117,7 @@ namespace Moji.Controllers.Controllers
                 return Ok(new ApiResponse<object>
                 {
                     Success = true,
-                    Message = "Login endpoint - implement based on your specific requirements",
+                    Message = "User logged in successfully",
                     Data = null
                 });
             }
