@@ -8,7 +8,6 @@ using System.Data;
 
 namespace Moji.DataService.Repositories.ModelRepositories
 {
-    // Moji.DataService/DataService/UserRepositoryDataService.cs
     public class UserRepositoryDataService : IUserRepositoryDataService
     {
         private readonly AppDbContext _context;
@@ -29,7 +28,7 @@ namespace Moji.DataService.Repositories.ModelRepositories
                 var parameters = new DynamicParameters();
                 parameters.Add("@Email", request.Email);
                 parameters.Add("@Username", request.Username);
-                parameters.Add("@Password", passwordHash); // Changed from @Password
+                parameters.Add("@Password", passwordHash); 
                 parameters.Add("@FirstName", request.FirstName);
                 parameters.Add("@LastName", request.LastName);
                 parameters.Add("@Phone", request.Phone);

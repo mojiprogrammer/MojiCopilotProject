@@ -41,7 +41,6 @@ namespace Moji.Controllers.Controllers
                     });
                 }
 
-                // Extract device info from request headers
                 var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
                 var userAgent = HttpContext.Request.Headers["User-Agent"].ToString();
 
@@ -65,7 +64,6 @@ namespace Moji.Controllers.Controllers
 
                 if (result.Success)
                 {
-                    // Set refresh token in HTTP-only cookie
                     SetRefreshTokenCookie(result.RefreshToken);
 
                     return Ok(new ApiResponse<RegisterLoginResponse>
@@ -95,44 +93,6 @@ namespace Moji.Controllers.Controllers
             }
         }
 
-        //[HttpPost("Login")]
-        //[AllowAnonymous]
-        //[ProducesResponseType(typeof(ApiResponse<RegisterLoginResponse>), StatusCodes.Status200OK)]
-        //[ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
-        //public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
-        //{
-        //    try
-        //    {
-        //        if (!ModelState.IsValid)
-        //        {
-        //            return BadRequest(new ApiResponse<object>
-        //            {
-        //                Success = false,
-        //                Message = "Invalid login data",
-        //                Data = ModelState.Values.SelectMany(v => v.Errors)
-        //            });
-        //        }
-
-        //        // Implement your login logic here
-        //        // This is just a placeholder
-        //        return Ok(new ApiResponse<object>
-        //        {
-        //            Success = true,
-        //            Message = "User logged in successfully",
-        //            Data = null
-        //        });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "Error during login for user {Email}", request.Email);
-        //        return StatusCode(500, new ApiResponse<object>
-        //        {
-        //            Success = false,
-        //            Message = "An unexpected error occurred during login",
-        //            Data = null
-        //        });
-        //    }
-        //}
 
         [HttpPost("Refresh-Token")]
         [AllowAnonymous]
@@ -209,13 +169,11 @@ namespace Moji.Controllers.Controllers
         {
             try
             {
-                // Get client IP address
+              
                 request.IpAddress = GetClientIpAddress();
 
-                // Get device info from headers
                 request.DeviceInfo = Request.Headers["User-Agent"].ToString();
 
-                // Validate request
                 if (string.IsNullOrWhiteSpace(request.EmailOrUsername))
                 {
                     return BadRequest(new { message = "Email or username is required" });
@@ -226,7 +184,6 @@ namespace Moji.Controllers.Controllers
                     return BadRequest(new { message = "Password is required" });
                 }
 
-                // Process login
                 var response = await _authService.UserLoginAsync(request);
 
                 if (!response.Success)
@@ -234,7 +191,6 @@ namespace Moji.Controllers.Controllers
                     return Unauthorized(new { message = response.Message });
                 }
 
-                // Set refresh token in HTTP-only cookie
                 SetRefreshTokenCookie(response.RefreshToken);
 
                 return Ok(new
@@ -248,7 +204,6 @@ namespace Moji.Controllers.Controllers
             }
             catch (Exception ex)
             {
-                // Log exception
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     new { message = "An error occurred during login" });
             }
@@ -272,7 +227,6 @@ namespace Moji.Controllers.Controllers
 
                 if (result)
                 {
-                    // Remove refresh token cookie
                     Response.Cookies.Delete("refreshToken");
                     return Ok(new { message = "Logged out successfully" });
                 }

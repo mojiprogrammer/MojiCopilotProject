@@ -35,8 +35,6 @@ namespace Moji.Services.Services
         }
 
         // ==================== REGISTRATION METHODS ====================
-
-        // In AuthService.cs - Update RegisterAsync
         public async Task<RegisterLoginResponse> RegisterAsync(RegisterLoginRequest request)
         {
             try
@@ -130,6 +128,7 @@ namespace Moji.Services.Services
 
             return await Task.FromResult(isValid);
         }
+
 
         // ==================== LOGIN METHODS ====================
 
