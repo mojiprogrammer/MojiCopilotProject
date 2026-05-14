@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="MailKitSample/MailKitSample.csproj" Id="e52a5619-de2a-4385-8dcf-436b4b61fa8b" />
   <Project Path="Moji.DataService/Moji.DataService.csproj" Id="7a509ed1-3239-467d-9490-f33368b0ca83" />
   <Project Path="Moji.Services/Moji.Services.csproj" Id="7e2b408e-7c68-43db-bd2e-e373a67c8599" />
   <Project Path="WebApplication1/Moji.Controllers.csproj" />

@@ -51,6 +51,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IUserRepositoryDataService, UserRepositoryDataService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

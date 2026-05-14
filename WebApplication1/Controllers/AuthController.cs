@@ -16,7 +16,7 @@ namespace Moji.Controllers.Controllers
         private readonly IAuthService _authService;
         private readonly ITokenService _tokenService;
         private readonly ILogger<AuthController> _logger;
-        public AuthController(IAuthService authService,ITokenService tokenService,ILogger<AuthController> logger)
+        public AuthController(IAuthService authService, ITokenService tokenService, ILogger<AuthController> logger)
         {
             _authService = authService;
             _tokenService = tokenService;
@@ -169,7 +169,7 @@ namespace Moji.Controllers.Controllers
         {
             try
             {
-              
+
                 request.IpAddress = GetClientIpAddress();
 
                 request.DeviceInfo = Request.Headers["User-Agent"].ToString();
@@ -380,6 +380,186 @@ namespace Moji.Controllers.Controllers
             return int.Parse(userIdClaim);
         }
 
+        [HttpPost("initiate-registration")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(ApiResponse<InitiateRegistrationResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> InitiateRegistration([FromBody] RegisterRequestDto request)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "Invalid registration data",
+                        Data = ModelState.Values.SelectMany(v => v.Errors)
+                    });
+                }
+
+                var ipAddress = GetClientIpAddress();
+                var userAgent = HttpContext.Request.Headers["User-Agent"].ToString();
+
+                var initiateRequest = new InitiateRegistrationRequest
+                {
+                    Email = request.Email,
+                    Username = request.Username,
+                    Password = request.Password,
+                    FirstName = request.FirstName,
+                    LastName = request.LastName,
+                    Phone = request.Phone,
+                    DateOfBirth = request.DateOfBirth,
+                    LanguageCode = request.LanguageCode,
+                    Timezone = request.Timezone,
+                    DeviceInfo = request.UserAgent ?? userAgent,
+                    IpAddress = ipAddress,
+                    UserAgent = userAgent
+                };
+
+                var result = await _authService.InitiateRegistrationAsync(initiateRequest);
+
+                if (result.Success)
+                {
+                    return Ok(new ApiResponse<InitiateRegistrationResponse>
+                    {
+                        Success = true,
+                        Message = result.Message,
+                        Data = result
+                    });
+                }
+
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = result.Message,
+                    Data = null
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during registration initiation");
+                return StatusCode(500, new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "An unexpected error occurred during registration initiation",
+                    Data = null
+                });
+            }
+        }
+
+        [HttpPost("verify-email")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(ApiResponse<RegisterLoginResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> VerifyEmailAndCompleteRegistration([FromBody] VerifyEmailRequestDto request)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "Invalid verification data",
+                        Data = ModelState.Values.SelectMany(v => v.Errors)
+                    });
+                }
+
+                var ipAddress = GetClientIpAddress();
+                var userAgent = HttpContext.Request.Headers["User-Agent"].ToString();
+
+                var verifyRequest = new VerifyEmailRequest
+                {
+                    Email = request.Email,
+                    VerificationCode = request.VerificationCode,
+                    DeviceInfo = request.DeviceInfo ?? userAgent,
+                    IpAddress = ipAddress,
+                    UserAgent = userAgent
+                };
+
+                var result = await _authService.VerifyEmailAndCompleteRegistrationAsync(verifyRequest);
+
+                if (result.Success)
+                {
+                    SetRefreshTokenCookie(result.RefreshToken);
+
+                    return Ok(new ApiResponse<RegisterLoginResponse>
+                    {
+                        Success = true,
+                        Message = "Email verified and registration completed successfully",
+                        Data = result
+                    });
+                }
+
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = result.Message,
+                    Data = null
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during email verification");
+                return StatusCode(500, new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "An unexpected error occurred during email verification",
+                    Data = null
+                });
+            }
+        }
+
+        [HttpPost("resend-verification")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ResendVerificationCode([FromBody] ResendVerificationRequestDto request)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "Invalid request",
+                        Data = ModelState.Values.SelectMany(v => v.Errors)
+                    });
+                }
+
+                var result = await _authService.ResendVerificationCodeAsync(request.Email);
+
+                if (result)
+                {
+                    return Ok(new ApiResponse<object>
+                    {
+                        Success = true,
+                        Message = "Verification code sent successfully to your email",
+                        Data = null
+                    });
+                }
+
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Failed to resend verification code. Please ensure you have a pending registration.",
+                    Data = null
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error resending verification code");
+                return StatusCode(500, new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "An unexpected error occurred while resending verification code",
+                    Data = null
+                });
+            }
+
         #endregion
+        }
     }
 }

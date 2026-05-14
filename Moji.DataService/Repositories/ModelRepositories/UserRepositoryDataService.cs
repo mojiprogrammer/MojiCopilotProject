@@ -266,5 +266,145 @@ namespace Moji.DataService.Repositories.ModelRepositories
 
             return new UserLoginResult();
         }
+
+        public async Task<bool> SavePendingRegistrationAsync(PendingRegistration request)
+        {
+            try
+            {
+                using var connection = _context.CreateConnection();
+                var parameters = new DynamicParameters();
+                parameters.Add("@Email", request.Email);
+                parameters.Add("@Username", request.Username);
+                parameters.Add("@PasswordHash", request.PasswordHash);
+                parameters.Add("@FirstName", request.FirstName);
+                parameters.Add("@LastName", request.LastName);
+                parameters.Add("@Phone", request.Phone);
+                parameters.Add("@DateOfBirth", request.DateOfBirth);
+                parameters.Add("@LanguageCode", request.LanguageCode);
+                parameters.Add("@Timezone", request.Timezone);
+                parameters.Add("@VerificationCode", request.VerificationCode);
+                parameters.Add("@VerificationCodeExpiry", request.VerificationCodeExpiry);
+                parameters.Add("@DeviceInfo", request.DeviceInfo);
+                parameters.Add("@UserAgent", request.UserAgent);
+
+                var result = await connection.ExecuteAsync("sp_SavePendingRegistration",parameters,commandType: CommandType.StoredProcedure);
+
+                return result > 0;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving pending registration for {Email}", request.Email);
+                throw;
+            }
+        }
+
+        public async Task<PendingRegistration?> GetPendingRegistrationAsync(string email)
+        {
+            try
+            {
+                using var connection = _context.CreateConnection();
+                var parameters = new { Email = email };
+
+                var result = await connection.QueryFirstOrDefaultAsync<PendingRegistration>(
+                    "sp_GetPendingRegistration",
+                    parameters,
+                    commandType: CommandType.StoredProcedure);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting pending registration for {Email}", email);
+                return null;
+            }
+        }
+
+        public async Task<bool> DeletePendingRegistrationAsync(string email)
+        {
+            try
+            {
+                using var connection = _context.CreateConnection();
+                var parameters = new { Email = email };
+
+                var result = await connection.ExecuteAsync(
+                    "sp_DeletePendingRegistration",
+                    parameters,
+                    commandType: CommandType.StoredProcedure);
+
+                return result > 0;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting pending registration for {Email}", email);
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateVerificationCodeAsync(string email, string newVerificationCode, DateTime newExpiry)
+        {
+            try
+            {
+                using var connection = _context.CreateConnection();
+                var parameters = new DynamicParameters();
+                parameters.Add("@Email", email);
+                parameters.Add("@NewVerificationCode", newVerificationCode);
+                parameters.Add("@NewExpiry", newExpiry);
+
+                var result = await connection.ExecuteAsync(
+                    "sp_UpdatePendingVerificationCode",
+                    parameters,
+                    commandType: CommandType.StoredProcedure);
+
+                return result > 0;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating verification code for {Email}", email);
+                return false;
+            }
+        }
+
+        public async Task<RegisterLoginResponse> CompleteRegistrationAsync(string email, string verificationCode, string ipAddress, string userAgent)
+        {
+            try
+            {
+                using var connection = _context.CreateConnection();
+                var parameters = new DynamicParameters();
+                parameters.Add("@Email", email);
+                parameters.Add("@VerificationCode", verificationCode);
+                parameters.Add("@IpAddress", ipAddress);
+                parameters.Add("@UserAgent", userAgent);
+
+                var result = await connection.QueryFirstOrDefaultAsync<RegisterLoginResponse>(
+                    "sp_CompleteRegistration",
+                    parameters,
+                    commandType: CommandType.StoredProcedure);
+
+                return result ?? new RegisterLoginResponse
+                {
+                    Success = false,
+                    Message = "Registration completion failed",
+                    AccessToken = string.Empty,
+                    RefreshToken = string.Empty
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error completing registration for {Email}", email);
+                throw;
+            }
+        }
+
+        public async Task<bool> IsEmailVerifiedAsync(string email)
+        {
+            using var connection = _context.CreateConnection();
+            var parameters = new { Email = email };
+            var result = await connection.ExecuteScalarAsync<bool>(
+                "sp_IsEmailVerified",
+                parameters,
+                commandType: CommandType.StoredProcedure);
+            return result;
+        }
     }
 }
+

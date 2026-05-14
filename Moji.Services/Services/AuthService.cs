@@ -19,19 +19,22 @@ namespace Moji.Services.Services
         private readonly ILogger<AuthService> _logger;
         private readonly IConfiguration _configuration;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly IEmailService _emailService;
 
         public AuthService(
             IUserRepositoryDataService userRepository,
             ITokenService tokenService,
             ILogger<AuthService> logger,
             IConfiguration configuration,
-            IPasswordHasher passwordHasher)
+            IPasswordHasher passwordHasher,
+            IEmailService emailService)
         {
             _userRepository = userRepository;
             _tokenService = tokenService;
             _logger = logger;
             _configuration = configuration;
             _passwordHasher = passwordHasher;
+            _emailService = emailService;
         }
 
         // ==================== REGISTRATION METHODS ====================
@@ -508,6 +511,266 @@ namespace Moji.Services.Services
                 BrowserName = "Unknown",
                 OperatingSystem = "Unknown"
             };
+        }
+
+        public async Task<InitiateRegistrationResponse> InitiateRegistrationAsync(InitiateRegistrationRequest request)
+        {
+            try
+            {
+                // Validate password strength
+                if (!await ValidatePasswordStrength(request.Password))
+                {
+                    return new InitiateRegistrationResponse
+                    {
+                        Success = false,
+                        Message = "Password must be at least 8 characters with uppercase, lowercase, number, and special character",
+                        Email = request.Email,
+                        VerificationCodeExpiry = DateTime.UtcNow
+                    };
+                }
+
+                // Check if email already exists and is verified
+                if (await _userRepository.CheckEmailExistsAsync(request.Email))
+                {
+                    return new InitiateRegistrationResponse
+                    {
+                        Success = false,
+                        Message = "Email already exists and is verified",
+                        Email = request.Email,
+                        VerificationCodeExpiry = DateTime.UtcNow
+                    };
+                }
+
+                // Check if username already exists
+                if (await _userRepository.CheckUsernameExistsAsync(request.Username))
+                {
+                    return new InitiateRegistrationResponse
+                    {
+                        Success = false,
+                        Message = "Username already exists",
+                        Email = request.Email,
+                        VerificationCodeExpiry = DateTime.UtcNow
+                    };
+                }
+
+                // Hash the password
+                var passwordHash = _passwordHasher.HashPassword(request.Password);
+
+                // Generate verification code (6 digits)
+                var verificationCode = GenerateVerificationToken();
+                var verificationCodeExpiry = DateTime.UtcNow.AddHours(2);
+
+                // Save pending registration
+                var pendingRegistration = new PendingRegistration
+                {
+                    Email = request.Email,
+                    Username = request.Username,
+                    PasswordHash = passwordHash,
+                    FirstName = request.FirstName,
+                    LastName = request.LastName,
+                    Phone = request.Phone,
+                    DateOfBirth = request.DateOfBirth,
+                    LanguageCode = request.LanguageCode,
+                    Timezone = request.Timezone,
+                    VerificationCode = verificationCode,
+                    VerificationCodeExpiry = verificationCodeExpiry,
+                    CreatedAt = DateTime.UtcNow,
+                    DeviceInfo = request.DeviceInfo,
+                    UserAgent = request.UserAgent
+                };
+
+                var saved = await _userRepository.SavePendingRegistrationAsync(pendingRegistration);
+
+                if (!saved)
+                {
+                    return new InitiateRegistrationResponse
+                    {
+                        Success = false,
+                        Message = "Failed to initiate registration. Please try again.",
+                        Email = request.Email,
+                        VerificationCodeExpiry = DateTime.UtcNow
+                    };
+                }
+
+                // Send verification email
+                var emailSent = await _emailService.SendVerificationEmailAsync(
+                    request.Email,
+                    request.Username,
+                    verificationCode);
+
+                if (!emailSent)
+                {
+                    _logger.LogWarning("Failed to send verification email to {Email}, but pending registration was saved", request.Email);
+                }
+
+                return new InitiateRegistrationResponse
+                {
+                    Success = true,
+                    Message = emailSent
+                        ? "Verification code sent to your email. Please verify to complete registration."
+                        : "Registration initiated but failed to send email. Please request a new verification code.",
+                    Email = request.Email,
+                    VerificationCodeExpiry = verificationCodeExpiry
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error initiating registration for {Email}", request.Email);
+                return new InitiateRegistrationResponse
+                {
+                    Success = false,
+                    Message = $"Failed to initiate registration: {ex.Message}",
+                    Email = request.Email,
+                    VerificationCodeExpiry = DateTime.UtcNow
+                };
+            }
+        }
+
+        public async Task<RegisterLoginResponse> VerifyEmailAndCompleteRegistrationAsync(VerifyEmailRequest request)
+        {
+            try
+            {
+                // Get pending registration
+                var pendingRegistration = await _userRepository.GetPendingRegistrationAsync(request.Email);
+
+                if (pendingRegistration == null)
+                {
+                    return new RegisterLoginResponse
+                    {
+                        Success = false,
+                        Message = "No pending registration found for this email. Please register again.",
+                        AccessToken = string.Empty,
+                        RefreshToken = string.Empty
+                    };
+                }
+
+                // Check if verification code is expired
+                if (pendingRegistration.VerificationCodeExpiry < DateTime.UtcNow)
+                {
+                    // Delete expired pending registration
+                    await _userRepository.DeletePendingRegistrationAsync(request.Email);
+
+                    return new RegisterLoginResponse
+                    {
+                        Success = false,
+                        Message = "Verification code has expired. Please register again.",
+                        AccessToken = string.Empty,
+                        RefreshToken = string.Empty
+                    };
+                }
+
+                // Verify the code
+                if (pendingRegistration.VerificationCode != request.VerificationCode)
+                {
+                    return new RegisterLoginResponse
+                    {
+                        Success = false,
+                        Message = "Invalid verification code. Please try again.",
+                        AccessToken = string.Empty,
+                        RefreshToken = string.Empty
+                    };
+                }
+
+                // Generate refresh token and verification token
+                var refreshToken = GenerateRefreshToken();
+                var verificationToken = GenerateVerificationToken();
+
+                var refreshTokenHash = _tokenService.HashToken(refreshToken);
+                var verificationTokenHash = _tokenService.HashToken(verificationToken);
+
+                // Create the registration request for completion
+                var registerRequest = new RegisterLoginRequest
+                {
+                    Email = pendingRegistration.Email,
+                    Username = pendingRegistration.Username,
+                    Password = pendingRegistration.PasswordHash, // This is already hashed
+                    FirstName = pendingRegistration.FirstName,
+                    LastName = pendingRegistration.LastName,
+                    Phone = pendingRegistration.Phone,
+                    DateOfBirth = pendingRegistration.DateOfBirth,
+                    LanguageCode = pendingRegistration.LanguageCode,
+                    Timezone = pendingRegistration.Timezone,
+                    DeviceInfo = pendingRegistration.DeviceInfo ?? request.DeviceInfo,
+                    IpAddress = request.IpAddress,
+                    UserAgent = pendingRegistration.UserAgent ?? request.UserAgent
+                };
+
+                // Complete registration in database
+                var result = await _userRepository.CompleteRegistrationAsync(
+                    request.Email,
+                    request.VerificationCode,
+                    request.IpAddress,
+                    request.UserAgent);
+
+                if (result.Success && result.UserId.HasValue)
+                {
+                    // Generate access token
+                    var accessToken = GenerateAccessToken(new Users
+                    {
+                        Id = result.UserId.Value,
+                        Email = result.Email ?? pendingRegistration.Email,
+                        Username = result.Username ?? pendingRegistration.Username
+                    });
+
+                    result.AccessToken = accessToken;
+                    result.RefreshToken = refreshToken;
+
+                    // Delete pending registration
+                    await _userRepository.DeletePendingRegistrationAsync(request.Email);
+
+                    // Send welcome email (fire and forget - don't wait for it)
+                    _ = Task.Run(() => _emailService.SendWelcomeEmailAsync(pendingRegistration.Email, pendingRegistration.Username));
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error completing registration for {Email}", request.Email);
+                return new RegisterLoginResponse
+                {
+                    Success = false,
+                    Message = $"Registration completion failed: {ex.Message}",
+                    AccessToken = string.Empty,
+                    RefreshToken = string.Empty
+                };
+            }
+        }
+
+        public async Task<bool> ResendVerificationCodeAsync(string email)
+        {
+            try
+            {
+                var pendingRegistration = await _userRepository.GetPendingRegistrationAsync(email);
+
+                if (pendingRegistration == null)
+                {
+                    _logger.LogWarning("No pending registration found for {Email} when trying to resend code", email);
+                    return false;
+                }
+
+                // Generate new verification code
+                var newVerificationCode = GenerateVerificationToken();
+                var newExpiry = DateTime.UtcNow.AddMinutes(10);
+
+                // Update in database
+                var updated = await _userRepository.UpdateVerificationCodeAsync(email, newVerificationCode, newExpiry);
+
+                if (!updated)
+                {
+                    return false;
+                }
+
+                // Send new verification email
+                var emailSent = await _emailService.SendVerificationCodeEmailAsync(email, newVerificationCode);
+
+                return emailSent;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error resending verification code to {Email}", email);
+                return false;
+            }
         }
     }
 }
