@@ -1,7 +1,4 @@
 ﻿using Moji.DataService.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Moji.DataService.Repositories.Interfaces
 {
