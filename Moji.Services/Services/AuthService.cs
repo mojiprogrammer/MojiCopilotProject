@@ -400,7 +400,7 @@ namespace Moji.Services.Services
 
         public string GenerateAccessToken(Users user)
         {
-            var jwtSettings = _configuration.GetSection("Jwt");
+            var jwtSettings = _configuration.GetSection("AppSettings:Jwt");
             var secretKey = jwtSettings["Secret"] ?? "k7xP9mN2vQ8rT5wX3zA6cV0bY1eU4iL7oJ9mN2vQ8rT5wX3zA6cV0bY1eU4iL8=";
             var issuer = jwtSettings["Issuer"];
             var audience = jwtSettings["Audience"];

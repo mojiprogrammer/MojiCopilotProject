@@ -10,7 +10,7 @@ namespace Moji.Controllers.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]
     public class UserProfileController : ControllerBase
     {
         private readonly IUserProfileService _userProfileService;

@@ -87,7 +87,7 @@ builder.Services.AddCors(options =>
 //builder.Services.UserRepositoryDataService();
 //builder.Services.AddServicesLayer();
 var app = builder.Build();
-app.UseCors("AllowAngularApp");
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -110,18 +110,18 @@ else
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
-
+app.UseCors("AllowAngularApp");
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseHttpsRedirection();
 app.UseRouting();
 
-app.UseAuthorization();
-
 app.MapStaticAssets();
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Auth}/{action=Login}/{id?}")
-    .WithStaticAssets();
+app.MapControllers();
+//app.MapControllerRoute(
+//    name: "default",
+//    pattern: "{controller=Auth}/{action=Login}/{id?}")
+//    .WithStaticAssets();
 
 
 app.Run();
