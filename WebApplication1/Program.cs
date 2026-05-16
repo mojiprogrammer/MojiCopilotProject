@@ -9,8 +9,13 @@ using Moji.Services.Services;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
+
+// Swagger configuration
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
@@ -44,19 +49,26 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
-builder.Services.AddScoped<AppDbContext>();
-// Add services to the container.
-builder.Services.AddControllersWithViews();
 
+// Database and Dependency Injection
+builder.Services.AddScoped<AppDbContext>();
 builder.Services.AddScoped<IUserRepositoryDataService, UserRepositoryDataService>();
 builder.Services.AddScoped<IUserProfileRepositoryDataService, UserProfileRepositoryDataService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IUserProfileService, UserProfileService>();
+builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
 
 builder.Services.AddHttpClient();
-builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
+
+// Authentication - MOVE THIS BEFORE AddAuthentication
+var jwtSecret = builder.Configuration["AppSettings:Jwt:Secret"];
+if (string.IsNullOrEmpty(jwtSecret))
+{
+    throw new InvalidOperationException("JWT Secret not configured");
+}
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -69,10 +81,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer = builder.Configuration["AppSettings:Jwt:Issuer"] ?? "MojiAPI",
             ValidAudience = builder.Configuration["AppSettings:Jwt:Audience"] ?? "MojiClient",
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["AppSettings:Jwt:Secret"]
-                    ?? throw new InvalidOperationException("JWT Secret not configured")))
+                Encoding.UTF8.GetBytes(jwtSecret))
         };
     });
+
+// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp",
@@ -84,44 +97,44 @@ builder.Services.AddCors(options =>
                    .AllowCredentials();
         });
 });
-//builder.Services.UserRepositoryDataService();
-//builder.Services.AddServicesLayer();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline - ORDER MATTERS HERE!
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Moji API V1");
-        c.RoutePrefix = ""; // Set Swagger UI at the root
+        c.RoutePrefix = "";
     });
 }
 else
 {
-    // In production, you might still want Swagger available
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Moji API V1");
-        c.RoutePrefix = ""; // Set Swagger UI at the root
+        c.RoutePrefix = "";
     });
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
-app.UseCors("AllowAngularApp");
-app.UseAuthentication();
-app.UseAuthorization();
+
+// CRITICAL: Middleware order must be:
+// 1. UseRouting
+// 2. UseCors
+// 3. UseAuthentication
+// 4. UseAuthorization
+// 5. UseEndpoints (implied by MapControllers)
+
 app.UseHttpsRedirection();
-app.UseRouting();
-
+app.UseCors("AllowAngularApp");
+app.UseRouting();  // <-- Move this BEFORE authentication/authorization
+app.UseAuthentication();  // <-- Must be after UseRouting
+app.UseAuthorization();   // <-- Must be after UseAuthentication
 app.MapStaticAssets();
-app.MapControllers();
-//app.MapControllerRoute(
-//    name: "default",
-//    pattern: "{controller=Auth}/{action=Login}/{id?}")
-//    .WithStaticAssets();
-
+app.MapControllers();  // <-- This replaces UseEndpoints
 
 app.Run();
