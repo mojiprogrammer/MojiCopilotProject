@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Moji.DataService.Models.UserPreference
+namespace Moji.DataService.Models
 {
     public class LanguagePreferenceRequest
     {

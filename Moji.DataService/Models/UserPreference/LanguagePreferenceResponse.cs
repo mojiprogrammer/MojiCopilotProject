@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Moji.DataService.Models.UserPreference
+namespace Moji.DataService.Models
 {
-    internal class LanguagePreferenceResponse
+    public class LanguagePreferenceResponse
     {
     }
 }
