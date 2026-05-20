@@ -28,7 +28,7 @@ namespace Moji.DataService.Repositories.ModelRepositories
                 var parameters = new DynamicParameters();
                 parameters.Add("@Email", request.Email);
                 parameters.Add("@Username", request.Username);
-                parameters.Add("@Password", passwordHash); 
+                parameters.Add("@Password", passwordHash);
                 parameters.Add("@FirstName", request.FirstName);
                 parameters.Add("@LastName", request.LastName);
                 parameters.Add("@Phone", request.Phone);
@@ -287,7 +287,7 @@ namespace Moji.DataService.Repositories.ModelRepositories
                 parameters.Add("@DeviceInfo", request.DeviceInfo);
                 parameters.Add("@UserAgent", request.UserAgent);
 
-                var result = await connection.ExecuteAsync("sp_SavePendingRegistration",parameters,commandType: CommandType.StoredProcedure);
+                var result = await connection.ExecuteAsync("sp_SavePendingRegistration", parameters, commandType: CommandType.StoredProcedure);
 
                 return result > 0;
             }
@@ -304,11 +304,7 @@ namespace Moji.DataService.Repositories.ModelRepositories
             {
                 using var connection = _context.CreateConnection();
                 var parameters = new { Email = email };
-
-                var result = await connection.QueryFirstOrDefaultAsync<PendingRegistration>(
-                    "sp_GetPendingRegistration",
-                    parameters,
-                    commandType: CommandType.StoredProcedure);
+                var result = await connection.QueryFirstOrDefaultAsync<PendingRegistration>("sp_GetPendingRegistration", parameters, commandType: CommandType.StoredProcedure);
 
                 return result;
             }
@@ -325,11 +321,7 @@ namespace Moji.DataService.Repositories.ModelRepositories
             {
                 using var connection = _context.CreateConnection();
                 var parameters = new { Email = email };
-
-                var result = await connection.ExecuteAsync(
-                    "sp_DeletePendingRegistration",
-                    parameters,
-                    commandType: CommandType.StoredProcedure);
+                var result = await connection.ExecuteAsync("sp_DeletePendingRegistration", parameters, commandType: CommandType.StoredProcedure);
 
                 return result > 0;
             }
@@ -350,10 +342,7 @@ namespace Moji.DataService.Repositories.ModelRepositories
                 parameters.Add("@NewVerificationCode", newVerificationCode);
                 parameters.Add("@NewExpiry", newExpiry);
 
-                var result = await connection.ExecuteAsync(
-                    "sp_UpdatePendingVerificationCode",
-                    parameters,
-                    commandType: CommandType.StoredProcedure);
+                var result = await connection.ExecuteAsync("sp_UpdatePendingVerificationCode", parameters, commandType: CommandType.StoredProcedure);
 
                 return result > 0;
             }
@@ -399,11 +388,30 @@ namespace Moji.DataService.Repositories.ModelRepositories
         {
             using var connection = _context.CreateConnection();
             var parameters = new { Email = email };
-            var result = await connection.ExecuteScalarAsync<bool>(
-                "sp_IsEmailVerified",
-                parameters,
-                commandType: CommandType.StoredProcedure);
+            var result = await connection.ExecuteScalarAsync<bool>("sp_IsEmailVerified", parameters, commandType: CommandType.StoredProcedure);
             return result;
+        }
+
+        public async Task<bool> ResetPasswordAsync(int userId, string newPasswordHash)
+        {
+            try
+            {
+                using var connection = _context.CreateConnection();
+                var parameters = new DynamicParameters();
+                parameters.Add("@UserId", userId);
+                parameters.Add("@NewPasswordHash", newPasswordHash);
+                parameters.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output);
+                await connection.ExecuteAsync("sp_ResetPassword", parameters, commandType: CommandType.StoredProcedure);
+               
+                var result = parameters.Get<int>("@Result");
+
+                return result == 1;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating password for user ID: {UserId}", userId);
+                throw;
+            }
         }
     }
 }

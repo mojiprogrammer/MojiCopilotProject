@@ -432,6 +432,89 @@ namespace Moji.Services.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
+        // ==================== RESET PASSWORD METHODS ====================
+
+        public async Task<Users> ValidateUserAsync(string emailOrUsername)
+        {
+            try
+            {
+                var user = await _userRepository.GetUserByEmailOrUserNameAsync(emailOrUsername);
+
+                if (user == null)
+                {
+                    _logger.LogWarning("User not found: {EmailOrUsername}", emailOrUsername);
+                    return null;
+                }
+
+                if (user.IsLocked)
+                {
+                    _logger.LogWarning("User is locked: {EmailOrUsername}", emailOrUsername);
+                    return null;
+                }
+
+                return user;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error validating user: {EmailOrUsername}", emailOrUsername);
+                return null;
+            }
+        }
+
+        public async Task<PasswordResetResponse> ResetPasswordAsync(string emailOrUsername, string newPassword)
+        {
+            try
+            {
+                // First validate user exists and is active
+                var user = await ValidateUserAsync(emailOrUsername);
+
+                if (user == null)
+                {
+                    return new PasswordResetResponse
+                    {
+                        Success = false,
+                        Message = "کاربری با این مشخصات یافت نشد یا حساب کاربری مسدود شده است"
+                    };
+                }
+
+                // Hash the new password
+                var passwordHash = _passwordHasher.HashPassword(newPassword);
+
+                // Update password using existing stored procedure
+                var updateResult = await _userRepository.ResetPasswordAsync(user.Id, passwordHash);
+
+                if (updateResult)
+                {
+                    _logger.LogInformation("Password reset successfully for user: {EmailOrUsername} (ID: {UserId})",
+                        emailOrUsername, user.Id);
+
+                    return new PasswordResetResponse
+                    {
+                        Success = true,
+                        Message = "رمز عبور با موفقیت تغییر یافت. اکنون می توانید وارد شوید."
+                    };
+                }
+                else
+                {
+                    _logger.LogError("Failed to update password for user: {EmailOrUsername}", emailOrUsername);
+                    return new PasswordResetResponse
+                    {
+                        Success = false,
+                        Message = "خطا در تغییر رمز عبور. لطفا مجددا تلاش کنید."
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error resetting password for {EmailOrUsername}", emailOrUsername);
+                return new PasswordResetResponse
+                {
+                    Success = false,
+                    Message = "خطا در ارتباط با سرور. لطفا مجددا تلاش کنید."
+                };
+            }
+        }
+
         // ==================== PRIVATE HELPER METHODS ====================
 
         private TokenResponse GenerateTokens(Users user)

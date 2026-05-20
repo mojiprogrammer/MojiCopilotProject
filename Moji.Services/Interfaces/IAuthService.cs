@@ -25,6 +25,8 @@ namespace Moji.Services.Interfaces
         Task<InitiateRegistrationResponse> InitiateRegistrationAsync(InitiateRegistrationRequest request);
         Task<RegisterLoginResponse> VerifyEmailAndCompleteRegistrationAsync(VerifyEmailRequest request);
         Task<bool> ResendVerificationCodeAsync(string email);
+        Task<PasswordResetResponse> ResetPasswordAsync(string emailOrUsername, string newPassword);
+        Task<Users> ValidateUserAsync(string emailOrUsername);
     }
 }
 

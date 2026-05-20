@@ -209,7 +209,7 @@ namespace Moji.Controllers.Controllers
             }
         }
 
-        [HttpPost("logout")]
+        [HttpPost("Logout")]
         [Authorize]
         public async Task<IActionResult> Logout()
         {
@@ -240,7 +240,7 @@ namespace Moji.Controllers.Controllers
             }
         }
 
-        [HttpPost("refresh-login-token")]
+        [HttpPost("RefreshLoginToken")]
         [AllowAnonymous]
         public async Task<IActionResult> RefreshLoginToken()
         {
@@ -275,7 +275,7 @@ namespace Moji.Controllers.Controllers
             }
         }
 
-        [HttpPost("change-password")]
+        [HttpPost("ChangePassword")]
         [Authorize]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
         {
@@ -314,7 +314,7 @@ namespace Moji.Controllers.Controllers
             }
         }
 
-        [HttpGet("validate-token")]
+        [HttpGet("ValidateToken")]
         [Authorize]
         public async Task<IActionResult> ValidateToken()
         {
@@ -380,7 +380,7 @@ namespace Moji.Controllers.Controllers
             return int.Parse(userIdClaim);
         }
 
-        [HttpPost("initiate-registration")]
+        [HttpPost("InitiateRegistration")]
         [AllowAnonymous]
         [ProducesResponseType(typeof(ApiResponse<InitiateRegistrationResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
@@ -448,7 +448,7 @@ namespace Moji.Controllers.Controllers
             }
         }
 
-        [HttpPost("verify-email")]
+        [HttpPost("VerifyEmail")]
         [AllowAnonymous]
         [ProducesResponseType(typeof(ApiResponse<RegisterLoginResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
@@ -511,7 +511,7 @@ namespace Moji.Controllers.Controllers
             }
         }
 
-        [HttpPost("resend-verification")]
+        [HttpPost("ResendVerification")]
         [AllowAnonymous]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
@@ -560,6 +560,52 @@ namespace Moji.Controllers.Controllers
             }
 
         #endregion
+        }
+
+        [HttpPost("ResetPassword")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword([FromBody] PasswordResetRequest request)
+        {
+            // Validate model
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "اطلاعات وارد شده معتبر نمی باشد",
+                    errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage))
+                });
+            }
+
+            // Check if passwords match
+            if (request.NewPassword != request.ConfirmPassword)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "رمز عبور و تکرار آن مطابقت ندارند"
+                });
+            }
+
+            // Reset password
+            var result = await _authService.ResetPasswordAsync(
+                request.EmailOrUsername,
+                request.NewPassword);
+
+            if (result.Success)
+            {
+                return Ok(new
+                {
+                    success = true,
+                    message = result.Message
+                });
+            }
+
+            return BadRequest(new
+            {
+                success = false,
+                message = result.Message
+            });
         }
     }
 }

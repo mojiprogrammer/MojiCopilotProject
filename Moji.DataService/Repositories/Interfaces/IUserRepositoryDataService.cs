@@ -38,6 +38,9 @@ namespace Moji.DataService.Repositories.Interfaces
         Task<bool> UpdateVerificationCodeAsync(string email, string newVerificationCode, DateTime newExpiry);
         Task<RegisterLoginResponse> CompleteRegistrationAsync(string email, string verificationCode, string ipAddress, string userAgent);
         Task<bool> IsEmailVerifiedAsync(string email);
+
+        //Reset Password
+        Task<bool> ResetPasswordAsync(int userId, string newPasswordHash);
     }
 
 }
