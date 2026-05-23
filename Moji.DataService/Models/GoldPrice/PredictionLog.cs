@@ -38,24 +38,8 @@ namespace Moji.DataService.Models
         [Column(TypeName = "datetime")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        // Optional: Additional fields for better tracking
-        [MaxLength(500)]
-        [Column(TypeName = "nvarchar(500)")]
-        public string? AdditionalData { get; set; }  // JSON formatted additional data
-
-        [Column(TypeName = "decimal(5, 2)")]
-        public decimal? ConfidenceLevel { get; set; }  // Prediction confidence percentage
-
-        [MaxLength(20)]
-        [Column(TypeName = "nvarchar(20)")]
-        public string? PredictionMethod { get; set; }  // e.g., "SSA", "ARIMA", "LSTM"
-
         public virtual GoldPrice? GoldPrice { get; set; }
         public virtual CurrencyPrice? CurrencyPrice { get; set; }
-
- 
-        public int? GoldPriceId { get; set; }
-        public int? CurrencyPriceId { get; set; }
 
         public void CalculateErrorPercentage()
         {

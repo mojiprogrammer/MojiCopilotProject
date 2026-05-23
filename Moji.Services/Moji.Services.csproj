@@ -20,4 +20,8 @@
     <ProjectReference Include="..\Moji.DataService\Moji.DataService.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\UserPermissions\" />
+  </ItemGroup>
+
 </Project>

@@ -210,7 +210,7 @@ namespace Moji.Services.MLServices
                     _mlContext.Model.Save(currencyModel, currencyData.Schema, _currencyModelPath);
                     _currencyModel = currencyModel;
                 }
-
+                
                 return true;
             }
             catch (Exception)

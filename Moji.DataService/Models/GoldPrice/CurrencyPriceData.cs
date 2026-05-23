@@ -15,5 +15,9 @@ namespace Moji.DataService.Models
 
         [LoadColumn(2)]
         public float PriceIRR { get; set; }
+        [LoadColumn(3)]
+        public string Source { get; set; }
+        [LoadColumn(4)]
+        public DateTime CreatedAt { get; set; }
     }
 }

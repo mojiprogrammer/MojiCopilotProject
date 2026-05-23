@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Moji.Controllers;
 using Moji.DataService;
+using Moji.DataService.Repositories;
 using Moji.DataService.Repositories.Interfaces;
 using Moji.DataService.Repositories.ModelRepositories;
 using Moji.Services.Interfaces;
@@ -72,6 +73,12 @@ builder.Services.AddScoped<IUserProfileRepositoryDataService, UserProfileReposit
 // Register prediction repositories and services
 builder.Services.AddScoped<IPredictionRepository, PredictionRepository>();
 builder.Services.AddScoped<IPredictionService, PredictionService>();
+
+builder.Services.AddScoped<IMenuRepositoryDataService, MenuRepositoryDataService>();
+builder.Services.AddScoped<IMenuService, MenuService>();
+
+builder.Services.AddScoped<IUserRoleRepositoryDataService, UserRoleRepositoryDataService>();
+builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 
 // Register other services
 builder.Services.AddScoped<ITokenService, TokenService>();
