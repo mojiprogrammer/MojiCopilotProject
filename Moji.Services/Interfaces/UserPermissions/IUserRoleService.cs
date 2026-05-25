@@ -12,6 +12,7 @@ namespace Moji.Services.Interfaces
         Task<IEnumerable<UserRoleResponse>> GetByUserIdAsync(int userId);
         Task<IEnumerable<UserRoleResponse>> GetActiveByUserIdAsync(int userId);
         Task<IEnumerable<UserRoleResponse>> GetAllAsync();
+        Task<IEnumerable<UserRoleResponse>> GetAllUsersRoleAsync();
         Task<UserRoleResponse> CreateAsync(UserRoleCreate userRole);
         Task<UserRoleResponse> UpdateAsync(UserRoleUpdate userRole);
         Task<bool> DeleteAsync(int id);

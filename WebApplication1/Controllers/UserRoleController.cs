@@ -102,6 +102,23 @@ namespace Moji.Controllers.Controllers
             }
         }
 
+        [HttpGet("users-list")]
+        [ProducesResponseType(typeof(IEnumerable<UserRoleResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<UserRoleResponse>>> GetAllUsers()
+        {
+            try
+            {
+                var result = await _userRoleService.GetAllUsersRoleAsync();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting all user roles");
+                return StatusCode(500, new { error = "An error occurred while retrieving user roles" });
+            }
+        }
+
         /// <summary>
         /// Create a new user role
         /// </summary>

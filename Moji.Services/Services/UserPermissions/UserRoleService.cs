@@ -79,6 +79,19 @@ namespace Moji.Services.Services
                 throw new Exception("An error occurred while retrieving user roles", ex);
             }
         }
+        public async Task<IEnumerable<UserRoleResponse>> GetAllUsersRoleAsync()
+        {
+            try
+            {
+                var userRoles = await _userRoleRepository.GetAllUsersRoleAsync();
+                return userRoles.Select(MapToResponse);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting all user roles");
+                throw new Exception("An error occurred while retrieving user roles", ex);
+            }
+        }
 
         public async Task<UserRoleResponse> CreateAsync(UserRoleCreate userRole)
         {
@@ -182,11 +195,13 @@ namespace Moji.Services.Services
         {
             return new UserRoleResponse
             {
-                Id = userRole.Id,
                 UserId = userRole.UserId,
+                Email= userRole.Email,
                 RoleName = userRole.RoleName,
+                FullName=userRole.FullName,
                 AssignedBy = userRole.AssignedBy,
                 CreatedTime = userRole.CreatedTime,
+                LastLoginTime= userRole.LastLoginTime,
                 ExpiresTime = userRole.ExpiresTime
             };
         }

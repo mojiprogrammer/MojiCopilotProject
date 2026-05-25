@@ -64,6 +64,16 @@ namespace Moji.DataService.Repositories
                 commandType: CommandType.StoredProcedure
             );
         }
+        public async Task<IEnumerable<UserRole>> GetAllUsersRoleAsync()
+        {
+            using var connection = _context.CreateConnection();
+
+            return await connection.QueryAsync<UserRole>(
+                "sp_GetAllUsers",
+                commandType: CommandType.StoredProcedure
+            );
+        }
+        
 
         public async Task<UserRole> CreateAsync(UserRoleCreate userRole)
         {

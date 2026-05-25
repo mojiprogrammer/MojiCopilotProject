@@ -11,6 +11,7 @@ namespace Moji.DataService.Repositories.Interfaces
         Task<IEnumerable<UserRole>> GetByUserIdAsync(int userId);
         Task<IEnumerable<UserRole>> GetActiveByUserIdAsync(int userId);
         Task<IEnumerable<UserRole>> GetAllAsync();
+        Task<IEnumerable<UserRole>> GetAllUsersRoleAsync();
         Task<UserRole> CreateAsync(UserRoleCreate userRole);
         Task<UserRole?> UpdateAsync(UserRoleUpdate userRole);
         Task<bool> DeleteAsync(int id);
