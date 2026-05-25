@@ -200,6 +200,7 @@ namespace Moji.Services.Services
                 RoleName = userRole.RoleName,
                 FullName=userRole.FullName,
                 AssignedBy = userRole.AssignedBy,
+                Username=userRole.Username,
                 CreatedTime = userRole.CreatedTime,
                 LastLoginTime= userRole.LastLoginTime,
                 ExpiresTime = userRole.ExpiresTime
