@@ -11,5 +11,6 @@ namespace Moji.DataService.Repositories.Interfaces
         Task<List<UserHomePageLoginHistory>> GetUserLoginHistoryAsync(int userId, int topCount = 5);
         Task<UserProfileComplete?> GetUserProfileCompleteAsync(int userId);
         Task<LastUserLoginInfo?> GetLastLoginInfoAsync(int userId);
+        Task<UserProfileComplete?> UpdateUserProfileAsync(int userId, UpdateProfileRequest profile);
     }
 }

@@ -260,6 +260,65 @@ namespace Moji.Controllers.Controllers
             }
         }
 
+        [HttpPut("Profile")]
+        [ProducesResponseType(typeof(ApiResponse<UserProfileComplete>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpdateProfile([FromForm] UpdateProfileRequest request)
+        {
+            try
+            {
+                var userId = GetUserIdFromClaims();
+                if (userId == null)
+                    return Unauthorized(new ApiResponse<object> { Success = false, Message = "User not authenticated" });
+
+                if (request == null)
+                    return BadRequest(new ApiResponse<object> { Success = false, Message = "Invalid request data" });
+
+                // Map to DTO
+                var updateDto = new UpdateProfileRequest
+                {
+                    FirstName = request.FirstName,
+                    LastName = request.LastName,
+                    Phone = request.Phone,
+                    DateOfBirth = request.DateOfBirth
+
+                    // ProfileImageUrl will be set by the service if a file is provided
+                };
+
+                var baseUrl = $"{Request.Scheme}://{Request.Host}";
+                var updatedProfile = await _userProfileService.UpdateUserProfileAsync(
+                    userId.Value,
+                    updateDto,
+                    request.UserProfileAvatar,
+                    baseUrl);
+
+                if (updatedProfile == null)
+                {
+                    return BadRequest(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "Profile update failed. Check your input or user status.",
+                        Data = null
+                    });
+                }
+
+                return Ok(new ApiResponse<UserProfileComplete>
+                {
+                    Success = true,
+                    Message = "Profile updated successfully",
+                    Data = updatedProfile
+                });
+            }
+            catch (ArgumentException ex) // validation from helper
+            {
+                return BadRequest(new ApiResponse<object> { Success = false, Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating profile");
+                return StatusCode(500, new ApiResponse<object> { Success = false, Message = "An error occurred" });
+            }
+        }
+
         #region Private Methods
 
         private int? GetUserIdFromClaims()

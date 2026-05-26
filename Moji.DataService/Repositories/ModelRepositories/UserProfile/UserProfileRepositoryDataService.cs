@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using Moji.DataService.Models;
 using Moji.DataService.Repositories.Interfaces;
@@ -9,7 +10,7 @@ using System.Text;
 
 namespace Moji.DataService.Repositories.ModelRepositories
 {
-    public class UserProfileRepositoryDataService: IUserProfileRepositoryDataService
+    public class UserProfileRepositoryDataService : IUserProfileRepositoryDataService
     {
         private readonly AppDbContext _context;
         private readonly ILogger<UserProfileRepositoryDataService> _logger;
@@ -110,5 +111,37 @@ namespace Moji.DataService.Repositories.ModelRepositories
                 return null;
             }
         }
+
+        public async Task<UserProfileComplete?> UpdateUserProfileAsync(int userId, UpdateProfileRequest profile)
+        {
+            try
+            {
+                using var connection = _context.CreateConnection();
+                var parameters = new DynamicParameters();
+                parameters.Add("@UserId", userId);
+                parameters.Add("@FirstName", profile.FirstName);
+                parameters.Add("@LastName", profile.LastName);
+                parameters.Add("@Phone", profile.Phone);
+                parameters.Add("@DateOfBirth", profile.DateOfBirth);
+                parameters.Add("@ProfileImageUrl", profile.ProfileImageUrl);
+
+                using var multi = await connection.QueryMultipleAsync(
+                    "sp_UpdateUserProfile",
+                    parameters,
+                    commandType: CommandType.StoredProcedure);
+                var updatedProfile = await multi.ReadFirstOrDefaultAsync<UserProfileComplete>();
+
+                var result = await multi.ReadFirstOrDefaultAsync<dynamic>();
+               
+
+                return updatedProfile;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating profile for user {UserId}", userId);
+                throw;
+            }
+        }
+
     }
 }

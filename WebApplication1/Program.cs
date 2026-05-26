@@ -7,6 +7,8 @@ using Moji.DataService;
 using Moji.DataService.Repositories;
 using Moji.DataService.Repositories.Interfaces;
 using Moji.DataService.Repositories.ModelRepositories;
+using Moji.Services.Helper;
+using Moji.Services.Helper.Implement;
 using Moji.Services.Interfaces;
 using Moji.Services.MLServices;
 using Moji.Services.Models;
@@ -80,16 +82,19 @@ builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddScoped<IUserRoleRepositoryDataService, UserRoleRepositoryDataService>();
 builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 
-// Register other services
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IUserProfileService, UserProfileService>();
 builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
 
+builder.Services.AddScoped<IFileUploadHelper, FileUploadHelper>();
+
 // Register background service for auto-training ML models
 builder.Services.AddHostedService<ModelTrainingBackgroundService>();
 builder.Services.AddHttpClient();
+
+
 
 // Configure prediction settings from appsettings.json
 builder.Services.Configure<PredictionSettings>(
@@ -147,7 +152,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// Configure the HTTP request pipeline - ORDER MATTERS HERE!
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -169,20 +174,14 @@ else
     app.UseHsts();
 }
 
-// CRITICAL: Middleware order must be:
-// 1. UseRouting
-// 2. UseCors
-// 3. UseAuthentication
-// 4. UseAuthorization
-// 5. UseEndpoints (implied by MapControllers)
-
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseCors("AllowAngularApp");
-app.UseRouting();  // <-- Move this BEFORE authentication/authorization
-app.UseAuthentication();  // <-- Must be after UseRouting
-app.UseAuthorization();   // <-- Must be after UseAuthentication
+app.UseRouting();  
+app.UseAuthentication();  
+app.UseAuthorization();   
 app.MapStaticAssets();
-app.MapControllers();  // <-- This replaces UseEndpoints
+app.MapControllers(); 
 
 
 

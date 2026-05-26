@@ -1,7 +1,5 @@
-﻿using Moji.DataService.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Microsoft.AspNetCore.Http;
+using Moji.DataService.Models;
 
 namespace Moji.Services.Interfaces
 {
@@ -11,5 +9,7 @@ namespace Moji.Services.Interfaces
         Task<List<UserHomePageLoginHistory>> GetUserLoginHistoryAsync(int userId, int topCount = 5);
         Task<UserProfileComplete?> GetUserProfileCompleteAsync(int userId);
         Task<LastUserLoginInfo?> GetLastLoginInfoAsync(int userId);
+        Task<UserProfileComplete?> UpdateUserProfileAsync(int userId, UpdateProfileRequest profile, IFormFile? avatarFile = null, string baseUrl = null);
+        Task<string> UploadAvatarAsync(int userId, IFormFile file, string baseUrl);
     }
 }

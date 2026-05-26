@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using Moji.DataService.Models;
 using Moji.DataService.Repositories.Interfaces;

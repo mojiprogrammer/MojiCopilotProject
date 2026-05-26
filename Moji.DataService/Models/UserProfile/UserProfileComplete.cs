@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -19,6 +20,8 @@ namespace Moji.DataService.Models
         public DateTime MemberSince { get; set; }
         public string? LanguageCode { get; set; }
         public string? Timezone { get; set; }
+        public IFormFile? UserProfileAvatar { get; set; }
+        public string? ProfileImageUrl { get; set; }
         public UserLoginStatistics? UserLoginStatistic { get; set; }
         public List<UserRecentLogin>? RecentUserLogins { get; set; }
     }
