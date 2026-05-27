@@ -19,11 +19,11 @@ namespace Moji.Controllers.Models
         [MaxLength(128)]
         public required string Password { get; set; }
 
-        [Required]
+        //[Required]
         [MaxLength(100)]
         public required string FirstName { get; set; }
 
-        [Required]
+       // [Required]
         [MaxLength(100)]
         public required string LastName { get; set; }
 
