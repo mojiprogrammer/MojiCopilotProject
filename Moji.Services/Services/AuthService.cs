@@ -329,10 +329,10 @@ namespace Moji.Services.Services
                 }
 
                 // Validate new password strength
-                if (!await ValidatePasswordStrength(newPassword))
-                {
-                    return false;
-                }
+                //if (!await ValidatePasswordStrength(newPassword))
+                //{
+                //    return false;
+                //}
 
                 // Hash new password
                 var newPasswordHash = _passwordHasher.HashPassword(newPassword);

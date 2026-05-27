@@ -12,6 +12,7 @@ namespace Moji.DataService.Models.UserPermissions
         public string RoleName { get; set; } = string.Empty;
         public string FullName { get; set; } = string.Empty;
         public string Username { get; set; } = string.Empty;
+        public string? ProfileImageUrl { get; set; }
         public int? AssignedBy { get; set; }
         public DateTime CreatedTime { get; set; }
         public DateTime? ExpiresTime { get; set; }
