@@ -14,6 +14,7 @@ namespace Moji.DataService.Models
         public string FullName { get; set; }
         public string? ProfileImageUrl { get; set; }
         public int? AssignedBy { get; set; }
+        public bool IsActive { get; set; }
         public DateTime CreatedTime { get; set; }
         public DateTime? ExpiresTime { get; set; }
         public DateTime? LastLoginTime { get; set; }

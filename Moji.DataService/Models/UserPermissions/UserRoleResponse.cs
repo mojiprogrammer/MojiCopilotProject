@@ -17,6 +17,6 @@ namespace Moji.DataService.Models.UserPermissions
         public DateTime CreatedTime { get; set; }
         public DateTime? ExpiresTime { get; set; }
         public DateTime? LastLoginTime { get; set; }
-        public bool IsActive => ExpiresTime == null || ExpiresTime > DateTime.UtcNow;
+        public bool IsActive { get; set; }
     }
 }

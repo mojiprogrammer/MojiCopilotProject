@@ -204,6 +204,7 @@ namespace Moji.Services.Services
                 CreatedTime = userRole.CreatedTime,
                 LastLoginTime= userRole.LastLoginTime,
                 ProfileImageUrl=userRole.ProfileImageUrl,
+                IsActive=userRole.IsActive,
                 ExpiresTime = userRole.ExpiresTime
             };
         }
