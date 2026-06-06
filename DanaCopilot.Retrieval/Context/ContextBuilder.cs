@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DanaCopilot.Application.Contracts.Retrieval;
+using System;
 using System.Collections.Generic;
 using System.Text;
 

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DanaCopilot.Retrieval.Search
 {
-    public class SqlSearchService
+    public class SqlSearchService: ISqlSearchService
     {
     }
 }

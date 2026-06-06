@@ -9,6 +9,8 @@ namespace DanaCopilot.Domain
     {
         public long Id { get; set; }
 
+        public decimal SimilarityScore { get; set; }
+
         public long MessageId { get; set; }
 
         public SourceType SourceType { get; set; }

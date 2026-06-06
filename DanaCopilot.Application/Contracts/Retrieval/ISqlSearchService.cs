@@ -6,5 +6,7 @@ namespace DanaCopilot.Application
 {
     public interface ISqlSearchService
     {
+        //Task<List<SearchResult>> SearchAsync(
+        //    string query);
     }
 }

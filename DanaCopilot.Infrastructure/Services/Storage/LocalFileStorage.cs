@@ -1,10 +1,11 @@
-﻿using System;
+﻿using DanaCopilot.Application;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace DanaCopilot.Infrastructure.Services
 {
-    public class LocalFileStorage
+    public class LocalFileStorage   
     {
     }
 }

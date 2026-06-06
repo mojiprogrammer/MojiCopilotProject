@@ -7,16 +7,23 @@ using System.Text;
 
 namespace DanaCopilot.Persistence.Configurations
 {
-    public class DocumentConfiguration
-     : IEntityTypeConfiguration<Document>
+    public class DocumentConfiguration : IEntityTypeConfiguration<Document>
     {
-        public void Configure(EntityTypeBuilder<Document> builder)
+        public void Configure(EntityTypeBuilder<Document> b)
         {
-            var value = builder.ToTable("core.Documents");
+            b.ToTable("Documents");
 
-            builder.Property(x => x.Title)
+            b.HasKey(x => x.Id);
+
+            b.Property(x => x.Title)
                 .HasMaxLength(500)
                 .IsRequired();
+
+            b.Property(x => x.FilePath)
+                .HasMaxLength(1000)
+                .IsRequired();
+
+            b.HasIndex(x => x.OrganizationId);
         }
     }
 }

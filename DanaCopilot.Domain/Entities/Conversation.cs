@@ -11,5 +11,6 @@ namespace DanaCopilot.Domain
         public long UserId { get; set; }
 
         public long OrganizationId { get; set; }
+        public string Title { get; set; }
     }
 }

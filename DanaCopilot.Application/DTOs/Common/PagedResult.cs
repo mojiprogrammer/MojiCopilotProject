@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DanaCopilot.Application
+namespace DanaCopilot.Application.DTOs.Common
 {
-    public class TicketDto
+    public class PagedResult
     {
     }
 }

@@ -8,6 +8,7 @@ namespace DanaCopilot.Domain
     public class Message
     {
         public long Id { get; set; }
+        public decimal ConfidenceScore { get; set; } = 0;
 
         public long ConversationId { get; set; }
 

@@ -1,3 +1,7 @@
+
+using DanaCopilot.Persistence;
+using DanaCopilot.Persistence.Repositories;
+using DanaCopilot.Persistence.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -94,7 +98,16 @@ builder.Services.AddScoped<IFileUploadHelper, FileUploadHelper>();
 builder.Services.AddHostedService<ModelTrainingBackgroundService>();
 builder.Services.AddHttpClient();
 
+//DanaCopilot Services
 
+builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
+builder.Services.AddScoped<IKnowledgeGapRepository, KnowledgeGapRepository>();
+builder.Services.AddScoped<IDocumentChunkRepository,DocumentChunkRepository>();
+builder.Services.AddScoped<ITicketRepository,TicketRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAnswerSourceRepository,AnswerSourceRepository>();
 
 // Configure prediction settings from appsettings.json
 builder.Services.Configure<PredictionSettings>(

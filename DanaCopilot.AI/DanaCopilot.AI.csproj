@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DanaCopilot.Application\DanaCopilot.Application.csproj" />
+    <ProjectReference Include="..\DanaCopilot.Retrieval\DanaCopilot.Retrieval.csproj" />
+  </ItemGroup>
+
 </Project>

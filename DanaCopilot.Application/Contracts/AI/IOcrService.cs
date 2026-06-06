@@ -6,5 +6,6 @@ namespace DanaCopilot.Application
 {
     public interface IOcrService
     {
+        Task<string> ExtractTextAsync( string filePath,CancellationToken cancellationToken = default);
     }
 }
