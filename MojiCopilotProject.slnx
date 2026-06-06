@@ -1,5 +1,13 @@
 <Solution>
-  <Project Path="MailKitSample/MailKitSample.csproj" Id="e52a5619-de2a-4385-8dcf-436b4b61fa8b" />
+  <Project Path="DanaCopilot.Admin/DanaCopilot.Admin.csproj" Id="9ddecdbd-c5a8-4427-bba7-e7a684e7f4af" />
+  <Project Path="DanaCopilot.AI/DanaCopilot.AI.csproj" Id="b7908436-09ca-483e-9d04-8ca610984303" />
+  <Project Path="DanaCopilot.Application/DanaCopilot.Application.csproj" Id="216bab6b-6a95-444b-a150-8cbde37616a5" />
+  <Project Path="DanaCopilot.BackgroundJobs/DanaCopilot.BackgroundJobs.csproj" Id="4096f2b4-d0a9-42aa-82b8-87987c8c0f9c" />
+  <Project Path="DanaCopilot.Domain/DanaCopilot.Domain.csproj" Id="0cc795d9-595d-48b2-9d51-fc4f4b6134e7" />
+  <Project Path="DanaCopilot.Infrastructure/DanaCopilot.Infrastructure.csproj" Id="171f824c-8b83-4dd7-8501-39507fb8795d" />
+  <Project Path="DanaCopilot.Persistence/DanaCopilot.Persistence.csproj" Id="d286d85d-2e03-413e-843e-101b417a6f6c" />
+  <Project Path="DanaCopilot.Retrieval/DanaCopilot.Retrieval.csproj" Id="dc90d6b4-3483-447c-8bfe-5f81a7b08d47" />
+  <Project Path="DanaCopilot.Shared/DanaCopilot.Shared.csproj" Id="6ccd3fb3-26be-4272-87ff-bbcf2b944198" />
   <Project Path="Moji.DataService/Moji.DataService.csproj" Id="7a509ed1-3239-467d-9490-f33368b0ca83" />
   <Project Path="Moji.Services/Moji.Services.csproj" Id="7e2b408e-7c68-43db-bd2e-e373a67c8599" />
   <Project Path="WebApplication1/Moji.Controllers.csproj" />
