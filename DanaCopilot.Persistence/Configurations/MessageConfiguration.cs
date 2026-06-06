@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DanaCopilot.Persistence
+namespace DanaCopilot.Persistence.Configurations
 {
-    public interface IKnowledgeGapRepository
+    public class MessageConfiguration
     {
     }
 }

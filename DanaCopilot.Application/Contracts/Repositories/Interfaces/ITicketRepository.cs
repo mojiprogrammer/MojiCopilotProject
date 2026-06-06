@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DanaCopilot.Persistence
+namespace DanaCopilot.Application.Contracts.Repositories.Interfaces
 {
     public interface ITicketRepository
     {
