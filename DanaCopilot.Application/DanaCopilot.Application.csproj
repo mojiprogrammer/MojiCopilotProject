@@ -8,6 +8,10 @@
 
   <ItemGroup>
     <Compile Remove="Contracts\Repositories\Interfaces\IDocumentRepository.cs" />
+    <Compile Remove="Contracts\Repositories\Interfaces\IKnowledgeGapRepository.cs" />
+    <Compile Remove="Contracts\Repositories\Interfaces\IMessageRepository.cs" />
+    <Compile Remove="Contracts\Repositories\Interfaces\ITicketRepository.cs" />
+    <Compile Remove="Contracts\Repositories\Interfaces\IUserRepository.cs" />
     <Compile Remove="Contracts\Retrieval\ISqlSearchService.cs" />
   </ItemGroup>
 

@@ -7,11 +7,13 @@
   </PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\DanaCopilot.AI\DanaCopilot.AI.csproj" />
 	  <ProjectReference Include="..\DanaCopilot.Application\DanaCopilot.Application.csproj" />
+	  <ProjectReference Include="..\DanaCopilot.BackgroundJobs\DanaCopilot.BackgroundJobs.csproj" />
 	  <ProjectReference Include="..\DanaCopilot.Infrastructure\DanaCopilot.Infrastructure.csproj" />
 	  <ProjectReference Include="..\DanaCopilot.Persistence\DanaCopilot.Persistence.csproj" />
 	  <ProjectReference Include="..\DanaCopilot.Retrieval\DanaCopilot.Retrieval.csproj" />

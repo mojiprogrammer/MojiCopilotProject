@@ -6,8 +6,7 @@ namespace DanaCopilot.Persistence
 {
     public class DanaAppDbContext : DbContext
     {
-        public DanaAppDbContext(DbContextOptions<DanaAppDbContext> options)
-            : base(options)
+        public DanaAppDbContext(DbContextOptions<DanaAppDbContext> options): base(options)
         {
         }
 

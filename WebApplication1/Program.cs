@@ -3,9 +3,11 @@ using DanaCopilot.AI.LLM;
 using DanaCopilot.Application;
 using DanaCopilot.Application.Contracts.AI;
 using DanaCopilot.Application.Contracts.Chat;
+using DanaCopilot.Application.Contracts.Repositories.Interfaces;
 using DanaCopilot.Application.Contracts.Retrieval;
 using DanaCopilot.Application.Services;
 using DanaCopilot.Application.UseCases.Copilot;
+using DanaCopilot.BackgroundJobs.Services;
 using DanaCopilot.Infrastructure.Security;
 using DanaCopilot.Infrastructure.Services;
 using DanaCopilot.Persistence;
@@ -76,6 +78,12 @@ builder.Services.AddSwaggerGen(c =>
 
 // Database and Dependency Injection
 builder.Services.AddScoped<AppDbContext>();
+builder.Services.AddDbContext<DanaAppDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MojiCopilotConnection"));
+});
+
+//builder.Services.AddScoped<DanaAppDbContext>();
 
 // Register Offline DbContext (SQLite) - For prediction module
 var offlineConnectionString = builder.Configuration.GetConnectionString("OfflineConnection")
@@ -130,15 +138,15 @@ builder.Services.AddScoped<IKnowledgeGapService,KnowledgeGapService>();
 builder.Services.AddScoped<IDocumentService,DocumentService>();
 builder.Services.AddScoped<ISqlSearchService, SqlSearchService>();
 builder.Services.AddScoped<IRetrievalService,RetrievalService>();
+builder.Services.AddScoped<IDocumentProcessingService, DocumentProcessingService>();
+
+
 
 builder.Services.AddScoped<PromptBuilder>();
 builder.Services.AddScoped<ILocalLlm, OllamaLlm>();
 
 builder.Services.AddScoped<ICopilotOrchestrator,CopilotOrchestrator>();
 
-builder.Services.AddScoped<IDocumentService, DocumentService>();
-builder.Services.AddScoped<IConversationService, ConversationService>();
-builder.Services.AddScoped<IMessageService, MessageService>();
 
 //builder.Services.AddHttpClient<ILocalLlm,OllamaLlm>(client =>
 //                       {
