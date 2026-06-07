@@ -12,9 +12,10 @@ namespace DanaCopilot.Domain.Entities
         public long OrganizationId { get; set; }
 
         public string Title { get; set; }
-
+        public string FileName { get; set; }
+        public long UploadedByUserId { get; set; }
+        public DateTime UploadedAt { get; set; }
         public string FilePath { get; set; }
-
         public DocumentStatus Status { get; set; }
     }
 }

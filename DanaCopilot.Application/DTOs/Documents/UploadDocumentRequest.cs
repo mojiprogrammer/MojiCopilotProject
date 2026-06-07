@@ -8,7 +8,7 @@ namespace DanaCopilot.Application.DTOs.Documents
     {
         public long UserId { get; set; }
 
-        public string Title { get; set; }
+        public string Title { get; set; }        
 
         public Stream FileStream { get; set; }
 

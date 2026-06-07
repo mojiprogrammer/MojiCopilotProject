@@ -6,7 +6,7 @@ namespace DanaCopilot.Domain
 {
     public enum DocumentStatus
     {
-        Active,
+        Uploaded,
         Inactive
     }
 }

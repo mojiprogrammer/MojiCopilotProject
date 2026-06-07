@@ -8,6 +8,16 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DanaCopilot.Application\DanaCopilot.Application.csproj" />
+    <ProjectReference Include="..\DanaCopilot.Persistence\DanaCopilot.Persistence.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.0" />
   </ItemGroup>
 
 </Project>

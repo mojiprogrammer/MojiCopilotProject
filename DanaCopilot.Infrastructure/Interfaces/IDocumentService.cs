@@ -4,14 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DanaCopilot.Application
+namespace DanaCopilot.Infrastructure.Interfaces
 {
     public interface IDocumentService
     {
-        Task<long> UploadAsync(UploadDocumentRequest request);
+        Task<long> UploadAsync(
+            UploadDocumentRequest request);
 
-        Task<Document> GetAsync(long id);
-
-        //Task<List<DocumentDto>> GetAllAsync();
+        Task<Document?> GetAsync(
+            long documentId);
     }
 }

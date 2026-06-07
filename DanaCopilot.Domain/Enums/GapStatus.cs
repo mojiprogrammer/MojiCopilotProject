@@ -7,6 +7,8 @@ namespace DanaCopilot.Domain
     public enum GapStatus
     {
         Active,
-        Pending
+        Pending,
+        Resolved,
+        Rejected
     }
 }

@@ -11,6 +11,7 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\DanaCopilot.Application\DanaCopilot.Application.csproj" />
+	  <ProjectReference Include="..\DanaCopilot.Infrastructure\DanaCopilot.Infrastructure.csproj" />
 	  <ProjectReference Include="..\DanaCopilot.Persistence\DanaCopilot.Persistence.csproj" />
 	  <ProjectReference Include="..\Moji.DataService\Moji.DataService.csproj" />
 	  <ProjectReference Include="..\Moji.Services\Moji.Services.csproj" />

@@ -1,4 +1,7 @@
 
+using DanaCopilot.Application;
+using DanaCopilot.Infrastructure.Security;
+using DanaCopilot.Infrastructure.Services;
 using DanaCopilot.Persistence;
 using DanaCopilot.Persistence.Repositories;
 using DanaCopilot.Persistence.Repositories.Interfaces;
@@ -108,6 +111,13 @@ builder.Services.AddScoped<IDocumentChunkRepository,DocumentChunkRepository>();
 builder.Services.AddScoped<ITicketRepository,TicketRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAnswerSourceRepository,AnswerSourceRepository>();
+
+builder.Services.AddScoped<IFileStorage,LocalFileStorage>();
+builder.Services.AddScoped<IDanaPasswordHasher,DanaPasswordHasher>();
+builder.Services.AddScoped<IConversationService,ConversationService>();
+builder.Services.AddScoped<IMessageService,MessageService>();
+builder.Services.AddScoped<IKnowledgeGapService,KnowledgeGapService>();
+builder.Services.AddScoped<IDocumentService,DocumentService>();
 
 // Configure prediction settings from appsettings.json
 builder.Services.Configure<PredictionSettings>(
