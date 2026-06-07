@@ -1,8 +1,10 @@
 
 using DanaCopilot.AI.LLM;
+using DanaCopilot.AI.OCR;
 using DanaCopilot.Application;
 using DanaCopilot.Application.Contracts.AI;
 using DanaCopilot.Application.Contracts.Chat;
+using DanaCopilot.Application.Contracts.Knowledge;
 using DanaCopilot.Application.Contracts.Repositories.Interfaces;
 using DanaCopilot.Application.Contracts.Retrieval;
 using DanaCopilot.Application.Services;
@@ -139,8 +141,8 @@ builder.Services.AddScoped<IDocumentService,DocumentService>();
 builder.Services.AddScoped<ISqlSearchService, SqlSearchService>();
 builder.Services.AddScoped<IRetrievalService,RetrievalService>();
 builder.Services.AddScoped<IDocumentProcessingService, DocumentProcessingService>();
-
-
+builder.Services.AddScoped<IOcrService, TesseractOcrService>();
+builder.Services.AddScoped<ITextChunker, TextChunker>();
 
 builder.Services.AddScoped<PromptBuilder>();
 builder.Services.AddScoped<ILocalLlm, OllamaLlm>();

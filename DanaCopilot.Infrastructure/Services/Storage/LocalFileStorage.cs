@@ -10,17 +10,12 @@ namespace DanaCopilot.Infrastructure.Services
     {
         private readonly string _rootPath;
 
-        public LocalFileStorage(
-            IConfiguration configuration)
+        public LocalFileStorage(IConfiguration configuration)
         {
-            _rootPath =
-                configuration["Storage:RootPath"]!;
+            _rootPath = configuration["Storage:RootPath"] ?? Path.Combine(Directory.GetCurrentDirectory(), "Storage");
         }
 
-        public async Task<string> SaveAsync(
-            Stream stream,
-            string fileName,
-            CancellationToken cancellationToken = default)
+        public async Task<string> SaveAsync(Stream stream,string fileName,CancellationToken cancellationToken = default)
         {
             var folder =
                 DateTime.UtcNow.ToString("yyyyMMdd");
@@ -46,17 +41,12 @@ namespace DanaCopilot.Infrastructure.Services
             return filePath;
         }
 
-        public async Task<Stream> OpenReadAsync(
-            string path,
-            CancellationToken cancellationToken = default)
+        public async Task<Stream> OpenReadAsync(string path,CancellationToken cancellationToken = default)
         {
-            return await Task.FromResult(
-                File.OpenRead(path));
+            return await Task.FromResult(File.OpenRead(path));
         }
 
-        public Task DeleteAsync(
-            string path,
-            CancellationToken cancellationToken = default)
+        public Task DeleteAsync(string path,CancellationToken cancellationToken = default)
         {
             if (File.Exists(path))
                 File.Delete(path);

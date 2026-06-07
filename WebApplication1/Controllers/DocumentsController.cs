@@ -8,7 +8,7 @@ using Moji.Controllers.Models;
 namespace Moji.Controllers.Controllers
 {
     [ApiController]
-    [Route("api/documents")]
+    [Route("api/[controller]")]
     public class DocumentsController : ControllerBase
     {
         private readonly IDocumentService _service;
@@ -26,11 +26,11 @@ namespace Moji.Controllers.Controllers
                 Title = request.Title,
                 FileName = request.File.FileName,
                 FileStream = request.File.OpenReadStream(),
-                UserId = 1 
+                UserId = 17
+
             };
 
-            var documentId =
-                await _service.UploadAsync(uploadRequest);
+            var documentId = await _service.UploadAsync(uploadRequest);
 
             return Ok(new UploadDocumentResponse
             {

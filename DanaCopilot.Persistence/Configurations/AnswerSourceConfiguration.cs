@@ -11,7 +11,7 @@ namespace DanaCopilot.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<AnswerSource> b)
         {
-            b.ToTable("AnswerSources");
+            b.ToTable("AnswerSources", "core");
 
             b.HasKey(x => x.Id);
 

@@ -11,7 +11,7 @@ namespace DanaCopilot.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<KnowledgeGap> b)
         {
-            b.ToTable("KnowledgeGaps");
+            b.ToTable("KnowledgeGaps", "core");
 
             b.HasKey(x => x.Id);
 

@@ -11,7 +11,7 @@ namespace DanaCopilot.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Message> b)
         {
-            b.ToTable("Messages");
+            b.ToTable("Messages", "core");
 
             b.HasKey(x => x.Id);
 

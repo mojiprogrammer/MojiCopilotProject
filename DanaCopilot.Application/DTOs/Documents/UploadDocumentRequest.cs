@@ -13,5 +13,6 @@ namespace DanaCopilot.Application.DTOs.Documents
         public Stream FileStream { get; set; }
 
         public string FileName { get; set; }
+
     }
 }

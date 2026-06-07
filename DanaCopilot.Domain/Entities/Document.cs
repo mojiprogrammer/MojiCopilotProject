@@ -1,17 +1,21 @@
 ﻿using DanaCopilot.Domain;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace DanaCopilot.Domain.Entities
 {
+    [Table("Documents", Schema = "core")]
     public class Document
     {
+        [Key]
         public long Id { get; set; }
-
         public long OrganizationId { get; set; }
-
         public string Title { get; set; }
+        public string FileExtension { get; set; } = string.Empty;
+        public long FileSize { get; set; }
         public string FileName { get; set; }
         public long UploadedByUserId { get; set; }
         public DateTime UploadedAt { get; set; }

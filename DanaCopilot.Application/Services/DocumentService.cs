@@ -24,8 +24,7 @@ namespace DanaCopilot.Application.Services
             _processor = processor;
         }
 
-        public async Task<long> UploadAsync(
-            UploadDocumentRequest request)
+        public async Task<long> UploadAsync(UploadDocumentRequest request)
         {
             var filePath = await _storage.SaveAsync(request.FileStream,request.FileName);
 
@@ -35,11 +34,14 @@ namespace DanaCopilot.Application.Services
                     Title = request.Title,
                     FileName = request.FileName,
                     FilePath = filePath,
-                    Status = DocumentStatus.Pending
+                    Status = DocumentStatus.Pending,
+                    UploadedAt = DateTime.Now,
+                    UploadedByUserId=17,
+                    OrganizationId= 2,
+                    
                 };
 
-            var id =
-                await _documents.CreateAsync(document);
+            var id =await _documents.CreateAsync(document);
 
             await _processor.ProcessDocumentAsync(id);
 

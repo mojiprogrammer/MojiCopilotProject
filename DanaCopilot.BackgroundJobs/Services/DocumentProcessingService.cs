@@ -2,7 +2,6 @@
 using DanaCopilot.Application.Contracts.Knowledge;
 using DanaCopilot.Application.Contracts.Repositories.Interfaces;
 using DanaCopilot.Domain;
-using DanaCopilot.Infrastructure.Interfaces;
 using DanaCopilot.Persistence.Repositories.Interfaces;
 
 namespace DanaCopilot.BackgroundJobs.Services
@@ -16,23 +15,26 @@ namespace DanaCopilot.BackgroundJobs.Services
         private readonly IOcrService _ocr;
 
         private readonly ITextChunker _chunker;
+        public DocumentProcessingService(IDocumentRepository documents,IDocumentChunkRepository documentChunks,IOcrService ocr,ITextChunker chunker)
+        {
+            _documents = documents;
+            _documentChunks = documentChunks;
+            _ocr = ocr;
+            _chunker = chunker;
+        }
         public async Task ProcessDocumentAsync(long documentId,CancellationToken cancellationToken = default)
         {
-            var document =
-                await _documents.GetByIdAsync(documentId);
+            var document = await _documents.GetByIdAsync(documentId);
 
             if (document == null)
                 return;
 
-            var text =
-                await _ocr.ExtractTextAsync(
-                    document.FilePath);
+            var text =await _ocr.ExtractTextAsync(document.FilePath);
 
             if (string.IsNullOrWhiteSpace(text))
                 return;
 
-            var chunks =
-                _chunker.Split(text);
+            var chunks =_chunker.Split(text);
 
             foreach (var chunk in chunks)
             {
@@ -40,15 +42,13 @@ namespace DanaCopilot.BackgroundJobs.Services
                     new DocumentChunk
                     {
                         DocumentId = document.Id,
-
                         ChunkIndex = chunk.Index,
-
-                        Content = chunk.Content
+                        Content = chunk.Content,
+                        ContentHash = chunk.ContentHash
                     });
             }
 
-            document.Status =
-                DocumentStatus.Processed;
+            document.Status =DocumentStatus.Processed;
 
             await _documents.UpdateAsync(document);
         }

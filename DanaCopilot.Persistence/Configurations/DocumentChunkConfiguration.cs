@@ -11,7 +11,7 @@ namespace DanaCopilot.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<DocumentChunk> b)
         {
-            b.ToTable("DocumentChunks");
+            b.ToTable("DocumentChunks", "core");
 
             b.HasKey(x => x.Id);
 

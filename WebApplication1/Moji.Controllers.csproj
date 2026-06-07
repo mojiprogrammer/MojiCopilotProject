@@ -21,6 +21,7 @@
 	  <ProjectReference Include="..\Moji.Services\Moji.Services.csproj" />
 	</ItemGroup>
 	<ItemGroup>
+	  <Folder Include="wwwroot\Storage\" />
 	  <Folder Include="wwwroot\uploads\" />
 	</ItemGroup>
 
