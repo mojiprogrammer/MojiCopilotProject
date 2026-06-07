@@ -8,7 +8,7 @@ namespace DanaCopilot.Application.DTOs.Knowledge
     {
         public long GapId { get; set; }
 
-        public string Answer { get; set; }
+        public string Answer { get; set; } = string.Empty;
 
         public long UserId { get; set; }
     }

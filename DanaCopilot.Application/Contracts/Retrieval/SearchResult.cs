@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DanaCopilot.Retrieval.Models
+namespace DanaCopilot.Application.Contracts.Retrieval
 {
     public class SearchResult
     {

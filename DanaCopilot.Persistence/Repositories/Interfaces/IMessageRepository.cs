@@ -7,10 +7,14 @@ namespace DanaCopilot.Persistence.Repositories.Interfaces
 {
     public interface IMessageRepository
     {
-        Task<long> CreateAsync(
-            Message message);
+        Task<long> CreateAsync(Message message);
 
-        Task<List<Message>> GetByConversationIdAsync(
-            long conversationId);
+        Task<Message?> GetByIdAsync(long id);
+
+        Task<List<Message>> GetByConversationIdAsync(long conversationId);
+
+        Task UpdateAsync(Message message);
+
+        Task DeleteAsync(long id);
     }
 }

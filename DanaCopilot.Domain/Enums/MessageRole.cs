@@ -6,7 +6,10 @@ namespace DanaCopilot.Domain
 {
     public enum MessageRole
     {
-        User,
-        System
+        User = 1,
+
+        Assistant = 2,
+
+        System = 3
     }
 }

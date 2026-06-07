@@ -7,8 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="LLM\ILocalLlm.cs" />
+    <Compile Remove="Models\LlmRequest.cs" />
+    <Compile Remove="Models\LlmResponse.cs" />
+    <Compile Remove="Models\PromptContext.cs" />
+    <Compile Remove="Prompting\PromptBuilder.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DanaCopilot.Application\DanaCopilot.Application.csproj" />
     <ProjectReference Include="..\DanaCopilot.Retrieval\DanaCopilot.Retrieval.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>

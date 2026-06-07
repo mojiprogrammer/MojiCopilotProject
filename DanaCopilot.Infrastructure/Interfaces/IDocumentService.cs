@@ -8,10 +8,8 @@ namespace DanaCopilot.Infrastructure.Interfaces
 {
     public interface IDocumentService
     {
-        Task<long> UploadAsync(
-            UploadDocumentRequest request);
+        Task<long> UploadAsync(UploadDocumentRequest request);
 
-        Task<Document?> GetAsync(
-            long documentId);
+        Task<Document?> GetAsync(long documentId);
     }
 }

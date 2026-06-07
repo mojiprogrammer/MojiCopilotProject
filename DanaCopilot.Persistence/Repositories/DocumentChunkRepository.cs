@@ -4,8 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DanaCopilot.Persistence.Repositories
 {
-    public class DocumentChunkRepository
-    : IDocumentChunkRepository
+    public class DocumentChunkRepository: IDocumentChunkRepository
     {
         private readonly DanaAppDbContext _db;
 
@@ -29,6 +28,13 @@ namespace DanaCopilot.Persistence.Repositories
                 .Where(x => x.DocumentId == documentId)
                 .OrderBy(x => x.ChunkIndex)
                 .ToListAsync();
+        }
+        public async Task CreateManyAsync(List<DocumentChunk> chunks)
+        {
+            await _db.DocumentChunks
+                .AddRangeAsync(chunks);
+
+            await _db.SaveChangesAsync();
         }
     }
 }

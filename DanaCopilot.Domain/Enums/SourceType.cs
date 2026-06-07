@@ -6,6 +6,7 @@ namespace DanaCopilot.Domain
 {
     public enum SourceType
     {
+        DocumentChunk,
         Internal,
         External
     }

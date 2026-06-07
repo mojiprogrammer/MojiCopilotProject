@@ -1,4 +1,5 @@
 ﻿using DanaCopilot.Application;
+using DanaCopilot.Application.Contracts.Chat;
 using DanaCopilot.Domain;
 using DanaCopilot.Persistence.Repositories.Interfaces;
 using System;

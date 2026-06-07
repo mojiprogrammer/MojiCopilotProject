@@ -1,11 +1,9 @@
-﻿using DanaCopilot.AI.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DanaCopilot.AI.Prompting
+namespace DanaCopilot.Application.UseCases.Copilot
 {
-
     public class PromptBuilder
     {
         public string Build(PromptContext context)

@@ -1,14 +1,10 @@
-﻿using DanaCopilot.Application;
-using DanaCopilot.Application.Contracts.Repositories.Interfaces;
+﻿using DanaCopilot.Application.Contracts.Repositories.Interfaces;
 using DanaCopilot.Application.DTOs.Documents;
 using DanaCopilot.Domain;
 using DanaCopilot.Domain.Entities;
 using DanaCopilot.Persistence.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace DanaCopilot.Infrastructure.Services
+namespace DanaCopilot.Application.Services
 {
     public class DocumentService : IDocumentService
     {
@@ -18,16 +14,20 @@ namespace DanaCopilot.Infrastructure.Services
 
         private readonly IDocumentProcessingService _processor;
 
-        public DocumentService(IDocumentRepository documents,IFileStorage storage,IDocumentProcessingService processor)
+        public DocumentService(
+            IDocumentRepository documents,
+            IFileStorage storage,
+            IDocumentProcessingService processor)
         {
             _documents = documents;
             _storage = storage;
             _processor = processor;
         }
 
-        public async Task<long> UploadAsync(UploadDocumentRequest request)
+        public async Task<long> UploadAsync(
+            UploadDocumentRequest request)
         {
-            var filePath =await _storage.SaveAsync(request.FileStream, request.FileName, CancellationToken.None);
+            var filePath = await _storage.SaveAsync(request.FileStream,request.FileName);
 
             var document =
                 new Document
@@ -35,8 +35,7 @@ namespace DanaCopilot.Infrastructure.Services
                     Title = request.Title,
                     FileName = request.FileName,
                     FilePath = filePath,
-                    Status = DocumentStatus.Pending,
-   
+                    Status = DocumentStatus.Pending
                 };
 
             var id =
@@ -47,9 +46,11 @@ namespace DanaCopilot.Infrastructure.Services
             return id;
         }
 
-        public async Task<DocumentDto?> GetAsync(long documentId)
+        public async Task<DocumentDto?> GetAsync(
+            long documentId)
         {
-            var document = await _documents.GetByIdAsync(documentId);
+            var document =
+                await _documents.GetByIdAsync(documentId);
 
             if (document == null)
                 return null;

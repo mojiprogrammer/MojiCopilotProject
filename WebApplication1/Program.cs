@@ -1,10 +1,20 @@
 
+using DanaCopilot.AI.LLM;
 using DanaCopilot.Application;
+using DanaCopilot.Application.Contracts.AI;
+using DanaCopilot.Application.Contracts.Chat;
+using DanaCopilot.Application.Contracts.Retrieval;
+using DanaCopilot.Application.Services;
+using DanaCopilot.Application.UseCases.Copilot;
 using DanaCopilot.Infrastructure.Security;
 using DanaCopilot.Infrastructure.Services;
 using DanaCopilot.Persistence;
 using DanaCopilot.Persistence.Repositories;
 using DanaCopilot.Persistence.Repositories.Interfaces;
+using DanaCopilot.Retrieval.Context;
+using DanaCopilot.Retrieval.Contracts;
+using DanaCopilot.Retrieval.Scoring;
+using DanaCopilot.Retrieval.Search;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -118,6 +128,27 @@ builder.Services.AddScoped<IConversationService,ConversationService>();
 builder.Services.AddScoped<IMessageService,MessageService>();
 builder.Services.AddScoped<IKnowledgeGapService,KnowledgeGapService>();
 builder.Services.AddScoped<IDocumentService,DocumentService>();
+builder.Services.AddScoped<ISqlSearchService, SqlSearchService>();
+builder.Services.AddScoped<IRetrievalService,RetrievalService>();
+
+builder.Services.AddScoped<PromptBuilder>();
+builder.Services.AddScoped<ILocalLlm, OllamaLlm>();
+
+builder.Services.AddScoped<ICopilotOrchestrator,CopilotOrchestrator>();
+
+builder.Services.AddScoped<IDocumentService, DocumentService>();
+builder.Services.AddScoped<IConversationService, ConversationService>();
+builder.Services.AddScoped<IMessageService, MessageService>();
+
+//builder.Services.AddHttpClient<ILocalLlm,OllamaLlm>(client =>
+//                       {
+//                           client.BaseAddress =
+//                               new Uri("http://localhost:11434");
+//                       });
+
+builder.Services.AddScoped<ContextBuilder>();
+
+builder.Services.AddScoped<ConfidenceScorer>();
 
 // Configure prediction settings from appsettings.json
 builder.Services.Configure<PredictionSettings>(

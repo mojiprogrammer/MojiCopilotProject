@@ -6,8 +6,6 @@ namespace DanaCopilot.Application.Contracts.Retrieval
 {
     public interface IRetrievalService
     {
-        //Task<RetrievalContext> GetContextAsync(
-        //    string question,
-        //    CancellationToken cancellationToken = default);
+        Task<RetrievalContext> GetContextAsync(string question, CancellationToken cancellationToken = default);
     }
 }

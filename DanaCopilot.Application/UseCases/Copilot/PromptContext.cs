@@ -1,10 +1,9 @@
 ﻿using DanaCopilot.Application.Contracts.Retrieval;
-using DanaCopilot.Retrieval.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DanaCopilot.AI.Models
+namespace DanaCopilot.Application.UseCases.Copilot
 {
     public class PromptContext
     {
@@ -12,6 +11,6 @@ namespace DanaCopilot.AI.Models
 
         public string ContextText { get; set; } = string.Empty;
 
-        public List<SearchResult> Sources { get; set; }= new();
+        public List<SearchResult> Sources { get; set; } = new();
     }
 }

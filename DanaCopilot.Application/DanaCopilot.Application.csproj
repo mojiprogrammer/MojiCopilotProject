@@ -7,11 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DanaCopilot.Domain\DanaCopilot.Domain.csproj" />
+    <Compile Remove="Contracts\Repositories\Interfaces\IDocumentRepository.cs" />
+    <Compile Remove="Contracts\Retrieval\ISqlSearchService.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
+    <ProjectReference Include="..\DanaCopilot.Domain\DanaCopilot.Domain.csproj" />
+    <ProjectReference Include="..\DanaCopilot.Persistence\DanaCopilot.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

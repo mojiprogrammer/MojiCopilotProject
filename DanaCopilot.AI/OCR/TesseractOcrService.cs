@@ -5,7 +5,11 @@ using System.Text;
 
 namespace DanaCopilot.AI.OCR
 {
-    public class TesseractOcrService
+    public class TesseractOcrService: IOcrService
     {
+        public async Task<string> ExtractTextAsync( string filePath)
+        {
+            return await Task.FromResult(File.ReadAllText(filePath));
+        }
     }
 }

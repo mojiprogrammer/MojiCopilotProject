@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DanaCopilot.Retrieval.Models
+namespace DanaCopilot.Application.Contracts.Retrieval
 {
     public class RetrievalContext
     {
@@ -10,6 +10,6 @@ namespace DanaCopilot.Retrieval.Models
 
         public decimal ConfidenceScore { get; set; }
 
-        public List<SearchResult> Results { get; set; } = [];
+        public List<SearchResult> Results { get; set; } = new();
     }
 }

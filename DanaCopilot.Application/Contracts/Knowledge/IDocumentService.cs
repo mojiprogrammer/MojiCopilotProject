@@ -1,8 +1,4 @@
 ﻿using DanaCopilot.Application.DTOs.Documents;
-using DanaCopilot.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DanaCopilot.Application
 {
@@ -10,8 +6,8 @@ namespace DanaCopilot.Application
     {
         Task<long> UploadAsync(UploadDocumentRequest request);
 
-        Task<Document> GetAsync(long id);
+        Task<DocumentDto?> GetAsync(long documentId);
 
-        //Task<List<DocumentDto>> GetAllAsync();
+        Task<List<DocumentDto>> GetAllAsync();
     }
 }

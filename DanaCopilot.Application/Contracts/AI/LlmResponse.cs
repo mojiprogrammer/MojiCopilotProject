@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DanaCopilot.AI.Models
+namespace DanaCopilot.Application.Contracts.AI
 {
     public class LlmResponse
     {

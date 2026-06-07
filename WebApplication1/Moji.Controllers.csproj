@@ -10,9 +10,11 @@
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
 	</ItemGroup>
 	<ItemGroup>
+	  <ProjectReference Include="..\DanaCopilot.AI\DanaCopilot.AI.csproj" />
 	  <ProjectReference Include="..\DanaCopilot.Application\DanaCopilot.Application.csproj" />
 	  <ProjectReference Include="..\DanaCopilot.Infrastructure\DanaCopilot.Infrastructure.csproj" />
 	  <ProjectReference Include="..\DanaCopilot.Persistence\DanaCopilot.Persistence.csproj" />
+	  <ProjectReference Include="..\DanaCopilot.Retrieval\DanaCopilot.Retrieval.csproj" />
 	  <ProjectReference Include="..\Moji.DataService\Moji.DataService.csproj" />
 	  <ProjectReference Include="..\Moji.Services\Moji.Services.csproj" />
 	</ItemGroup>

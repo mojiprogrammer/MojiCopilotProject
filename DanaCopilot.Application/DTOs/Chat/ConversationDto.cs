@@ -6,5 +6,10 @@ namespace DanaCopilot.Application.DTOs.Chat
 {
     public class ConversationDto
     {
+        public long Id { get; set; }
+
+        public long UserId { get; set; }
+
+        public DateTime CreatedAt { get; set; }
     }
 }

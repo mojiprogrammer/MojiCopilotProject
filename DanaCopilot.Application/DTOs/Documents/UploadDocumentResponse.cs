@@ -8,6 +8,7 @@ namespace DanaCopilot.Application.DTOs.Documents
     public class UploadDocumentResponse
     {
         public long DocumentId { get; set; }
+        public string Title { get; set; } = string.Empty;
 
         public DocumentStatus Status { get; set; }
     }

@@ -4,14 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DanaCopilot.Application
+namespace DanaCopilot.Application.Contracts.Chat
 {
     public interface IConversationService
     {
         Task<long> CreateAsync(long userId);
 
-        Task<Conversation> GetAsync(long id);
+        Task<ConversationDto?> GetAsync(long conversationId);
 
-        Task ArchiveAsync(long id);
+        Task<List<MessageDto>>GetMessagesAsync(long conversationId);
     }
 }
