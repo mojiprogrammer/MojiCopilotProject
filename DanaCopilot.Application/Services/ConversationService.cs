@@ -23,8 +23,7 @@ namespace DanaCopilot.Application.Services
 
         public async Task<long> CreateAsync(long userId)
         {
-            var conversation =
-                new Conversation
+            var conversation =new Conversation
                 {
                     UserId = userId,
                     CreatedAt = DateTime.UtcNow

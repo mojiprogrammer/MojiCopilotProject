@@ -23,21 +23,14 @@ namespace DanaCopilot.Application.Contracts.AI
 
         public async Task<AskResponse> AskAsync(AskRequest request, CancellationToken cancellationToken = default)
         {
-            var retrievalContext =
-                await _retrieval.GetContextAsync(
-                    request.Question,
-                    cancellationToken);
+            var retrievalContext = await _retrieval.GetContextAsync(request.Question, cancellationToken);
 
             if (retrievalContext.ConfidenceScore < 0.30m)
             {
                 return new AskResponse
                 {
-                    Answer =
-                        "اطلاعات کافی برای پاسخ یافت نشد.",
-
-                    ConfidenceScore =
-                        retrievalContext.ConfidenceScore,
-
+                    Answer = "اطلاعات کافی برای پاسخ یافت نشد.",
+                    ConfidenceScore = retrievalContext.ConfidenceScore,
                     IsFallbackResponse = true
                 };
             }
@@ -46,18 +39,14 @@ namespace DanaCopilot.Application.Contracts.AI
                 _promptBuilder.Build(new PromptContext
                 {
                     Question = request.Question,
-
-                    ContextText =
-                            retrievalContext.ContextText,
-
-                    Sources =
-                            retrievalContext.Results
+                    ContextText = retrievalContext.ContextText,
+                    Sources = retrievalContext.Results
                 });
 
             var llmResponse = await _llm.GenerateAsync(new LlmRequest
             {
                 Prompt = prompt
-            },cancellationToken);
+            }, cancellationToken);
 
             return new AskResponse
             {

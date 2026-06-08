@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Moji.Controllers.Controllers
 {
     [ApiController]
-    [Route("api/copilot")]
+    [Route("api/[controller]")]
     public class CopilotController : ControllerBase
     {
         private readonly ICopilotOrchestrator _orchestrator;

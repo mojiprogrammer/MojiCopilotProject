@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Moji.Controllers.Controllers
 {
     [ApiController]
-    [Route("api/conversations")]
+    [Route("api/[controller]")]
     public class ConversationsController : ControllerBase
     {
         private readonly IConversationService _service;
