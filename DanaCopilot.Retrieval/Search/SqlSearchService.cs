@@ -3,7 +3,7 @@ using DanaCopilot.Domain;
 using DanaCopilot.Persistence;
 using DanaCopilot.Retrieval.Contracts;
 using Microsoft.EntityFrameworkCore;
-using ISqlSearchService = DanaCopilot.Retrieval.Contracts.ISqlSearchService;
+
 
 namespace DanaCopilot.Retrieval.Search
 {
