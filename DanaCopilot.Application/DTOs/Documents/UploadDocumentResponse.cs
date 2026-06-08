@@ -9,7 +9,6 @@ namespace DanaCopilot.Application.DTOs.Documents
     {
         public long DocumentId { get; set; }
         public string Title { get; set; } = string.Empty;
-
         public DocumentStatus Status { get; set; }
     }
 }

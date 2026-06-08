@@ -8,12 +8,11 @@ namespace DanaCopilot.Domain
     {
         public long Id { get; set; }
         public long ChunkIndex { get; set; }
-
         public long DocumentId { get; set; }
-
         public string Content { get; set; }
         public string ContentHash { get; set; }
-
         public int PageNumber { get; set; }
+        public int TokenCount { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
-}
+}   

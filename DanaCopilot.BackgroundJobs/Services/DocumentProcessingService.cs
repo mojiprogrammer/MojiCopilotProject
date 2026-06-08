@@ -44,7 +44,10 @@ namespace DanaCopilot.BackgroundJobs.Services
                         DocumentId = document.Id,
                         ChunkIndex = chunk.Index,
                         Content = chunk.Content,
-                        ContentHash = chunk.ContentHash
+                        ContentHash = chunk.ContentHash,
+                        TokenCount = chunk.TokenCount,
+                        CreatedAt=DateTime.Now
+                        
                     });
             }
 
