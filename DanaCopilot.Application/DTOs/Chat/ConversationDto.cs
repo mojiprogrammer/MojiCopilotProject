@@ -9,7 +9,9 @@ namespace DanaCopilot.Application.DTOs.Chat
         public long Id { get; set; }
 
         public long UserId { get; set; }
+        public string Title { get; set; }
 
         public DateTime CreatedAt { get; set; }
+        public DateTime LastActivityAt { get; set; }
     }
 }

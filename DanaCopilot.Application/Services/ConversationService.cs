@@ -44,6 +44,8 @@ namespace DanaCopilot.Application.Services
             {
                 Id = conversation.Id,
                 UserId = conversation.UserId,
+                Title=conversation.Title,
+                LastActivityAt = conversation.LastActivityAt,
                 CreatedAt = conversation.CreatedAt
             };
         }
