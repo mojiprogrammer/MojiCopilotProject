@@ -26,7 +26,8 @@ namespace Moji.Controllers.Controllers
                 Title = request.Title,
                 FileName = request.File.FileName,
                 FileStream = request.File.OpenReadStream(),
-                UserId = 17
+                UserId = 17,
+                ConversationId = request.ConversationId
 
             };
 
