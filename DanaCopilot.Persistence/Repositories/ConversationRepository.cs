@@ -1,8 +1,6 @@
 ﻿using DanaCopilot.Domain;
 using DanaCopilot.Persistence.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace DanaCopilot.Persistence.Repositories
 {
@@ -20,6 +18,13 @@ namespace DanaCopilot.Persistence.Repositories
             await _db.Conversations.AddAsync(conversation);
             await _db.SaveChangesAsync();
             return conversation.Id;
+        }
+
+        public async Task<List<Conversation>?> GetAll(long userId)
+        {
+            return await _db.Conversations
+                .Where(c => c.UserId == userId)
+                .ToListAsync();
         }
 
         public async Task<Conversation?> GetByIdAsync(long id)

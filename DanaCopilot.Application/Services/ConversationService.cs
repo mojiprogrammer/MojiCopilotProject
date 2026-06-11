@@ -8,8 +8,7 @@ using System.Text;
 
 namespace DanaCopilot.Application.Services
 {
-    public class ConversationService
-    : IConversationService
+    public class ConversationService: IConversationService
     {
         private readonly IConversationRepository _conversations;
 
@@ -32,8 +31,20 @@ namespace DanaCopilot.Application.Services
             return await _conversations.CreateAsync(conversation);
         }
 
-        public async Task<ConversationDto?> GetAsync(
-            long conversationId)
+        public async Task<List<ConversationDto>> GetAll(long userId)
+        {
+            var conversations = await _conversations.GetAll(userId);
+            return conversations.Select(c => new ConversationDto
+            {
+                Id = c.Id,
+                UserId = c.UserId,
+                Title = c.Title,
+                LastActivityAt = c.LastActivityAt,
+                CreatedAt = c.CreatedAt
+            }).ToList();
+        }
+
+        public async Task<ConversationDto?> GetAsync(long conversationId)
         {
             var conversation = await _conversations.GetByIdAsync(conversationId);
 

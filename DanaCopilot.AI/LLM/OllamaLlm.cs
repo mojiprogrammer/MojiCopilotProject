@@ -16,7 +16,7 @@ namespace DanaCopilot.AI.LLM
         {
             var payload = new
             {
-                model = "llama3",
+                model = "llama3.2",  
                 prompt = request.Prompt,
                 stream = false
             };
@@ -36,10 +36,6 @@ namespace DanaCopilot.AI.LLM
             };
         }
 
-        private class OllamaResponse
-        {
-            public string response { get; set; }
-                = string.Empty;
-        }
+      
     }
 }

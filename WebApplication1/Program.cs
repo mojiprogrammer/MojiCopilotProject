@@ -127,19 +127,19 @@ builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
 builder.Services.AddScoped<IKnowledgeGapRepository, KnowledgeGapRepository>();
-builder.Services.AddScoped<IDocumentChunkRepository,DocumentChunkRepository>();
-builder.Services.AddScoped<ITicketRepository,TicketRepository>();
+builder.Services.AddScoped<IDocumentChunkRepository, DocumentChunkRepository>();
+builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IAnswerSourceRepository,AnswerSourceRepository>();
+builder.Services.AddScoped<IAnswerSourceRepository, AnswerSourceRepository>();
 
-builder.Services.AddScoped<IFileStorage,LocalFileStorage>();
-builder.Services.AddScoped<IDanaPasswordHasher,DanaPasswordHasher>();
-builder.Services.AddScoped<IConversationService,ConversationService>();
-builder.Services.AddScoped<IMessageService,MessageService>();
-builder.Services.AddScoped<IKnowledgeGapService,KnowledgeGapService>();
-builder.Services.AddScoped<IDocumentService,DocumentService>();
+builder.Services.AddScoped<IFileStorage, LocalFileStorage>();
+builder.Services.AddScoped<IDanaPasswordHasher, DanaPasswordHasher>();
+builder.Services.AddScoped<IConversationService, ConversationService>();
+builder.Services.AddScoped<IMessageService, MessageService>();
+builder.Services.AddScoped<IKnowledgeGapService, KnowledgeGapService>();
+builder.Services.AddScoped<IDocumentService, DocumentService>();
 builder.Services.AddScoped<ISqlSearchService, SqlSearchService>();
-builder.Services.AddScoped<IRetrievalService,RetrievalService>();
+builder.Services.AddScoped<IRetrievalService, RetrievalService>();
 builder.Services.AddScoped<IDocumentProcessingService, DocumentProcessingService>();
 builder.Services.AddScoped<IOcrService, TesseractOcrService>();
 builder.Services.AddScoped<ITextChunker, TextChunker>();
@@ -147,14 +147,13 @@ builder.Services.AddScoped<ITextChunker, TextChunker>();
 builder.Services.AddScoped<PromptBuilder>();
 builder.Services.AddScoped<ILocalLlm, OllamaLlm>();
 
-builder.Services.AddScoped<ICopilotOrchestrator,CopilotOrchestrator>();
+builder.Services.AddScoped<ICopilotOrchestrator, CopilotOrchestrator>();
 
 
-//builder.Services.AddHttpClient<ILocalLlm,OllamaLlm>(client =>
-//                       {
-//                           client.BaseAddress =
-//                               new Uri("http://localhost:11434");
-//                       });
+builder.Services.AddHttpClient<ILocalLlm, OllamaLlm>(client =>
+                       {
+                           client.BaseAddress =new Uri("http://localhost:11434");
+                       });
 
 builder.Services.AddScoped<ContextBuilder>();
 
@@ -241,11 +240,11 @@ else
 app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseCors("AllowAngularApp");
-app.UseRouting();  
-app.UseAuthentication();  
-app.UseAuthorization();   
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapStaticAssets();
-app.MapControllers(); 
+app.MapControllers();
 
 
 
