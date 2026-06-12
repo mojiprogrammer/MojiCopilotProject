@@ -1,13 +1,13 @@
 ﻿using DanaCopilot.Application.Contracts.Telegram;
 using DanaCopilot.Domain.Entities;
 using DanaCopilot.Persistence.Repositories.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DanaCopilot.Application.Services
 {
@@ -15,41 +15,38 @@ namespace DanaCopilot.Application.Services
     {
         private readonly ITelegramBotClient _botClient;
         private readonly ITelegramRepository _telegramRepository;
-        private readonly ITelegramBusinessService _businessService;
+        private readonly IConfiguration _configuration;
         private readonly ILogger<TelegramBotService> _logger;
-        private readonly TelegramBotConfiguration _config;
+
+        // Inject your existing services here
+        // private readonly IYourExistingService _yourService;
 
         public TelegramBotService(
             ITelegramBotClient botClient,
-            IOptions<TelegramBotConfiguration> config,
             ITelegramRepository telegramRepository,
-            ITelegramBusinessService businessService,
-            ILogger<TelegramBotService> logger)
+            IConfiguration configuration,
+            ILogger<TelegramBotService> logger
+            // IYourExistingService yourService  // Uncomment if you have existing services
+            )
         {
             _botClient = botClient;
-            _config = config.Value;
             _telegramRepository = telegramRepository;
-            _businessService = businessService;
+            _configuration = configuration;
             _logger = logger;
+            // _yourService = yourService;
         }
 
         public async Task HandleUpdateAsync(object updateObj)
         {
-            // Parse the update from JSON if needed
-            Telegram.Bot.Types.Update update;
-            if (updateObj is Telegram.Bot.Types.Update u)
+            Update update;
+            if (updateObj is Update u)
             {
                 update = u;
             }
-            else if (updateObj is string json)
-            {
-                update = System.Text.Json.JsonSerializer.Deserialize<Telegram.Bot.Types.Update>(json);
-            }
             else
             {
-                // Try to deserialize from the object
                 var jsonString = System.Text.Json.JsonSerializer.Serialize(updateObj);
-                update = System.Text.Json.JsonSerializer.Deserialize<Telegram.Bot.Types.Update>(jsonString);
+                update = System.Text.Json.JsonSerializer.Deserialize<Update>(jsonString);
             }
 
             if (update == null) return;
@@ -79,7 +76,7 @@ namespace DanaCopilot.Application.Services
             // Save or update user info
             var telegramUser = new TelegramUser
             {
-                TelegramUserId = message.From.Id,
+                TelegramUserId = (int)message.From.Id,
                 ChatId = message.Chat.Id.ToString(),
                 Username = message.From.Username,
                 FirstName = message.From.FirstName,
@@ -102,12 +99,10 @@ namespace DanaCopilot.Application.Services
             // Process text messages
             if (!string.IsNullOrEmpty(message.Text))
             {
-                // Check if it's a command
                 if (message.Text.StartsWith("/"))
                 {
-                    response = await _businessService.ProcessCommandAsync(message.From.Id, message.Text);
+                    response = await ProcessCommandAsync(message.From.Id, message.Text);
                 }
-                // Check if it's a link code (6 digits)
                 else if (message.Text.Length == 6 && int.TryParse(message.Text, out _))
                 {
                     var linked = await ProcessLinkCodeAsync(message.From.Id, message.Text);
@@ -117,7 +112,7 @@ namespace DanaCopilot.Application.Services
                 }
                 else
                 {
-                    response = await _businessService.ProcessMessageAsync(message.From.Id, message.Text);
+                    response = await ProcessMessageAsync(message.From.Id, message.Text);
                 }
             }
 
@@ -125,7 +120,6 @@ namespace DanaCopilot.Application.Services
             {
                 await SendMessageAsync(message.From.Id, response);
 
-                // Log response
                 await _telegramRepository.LogMessageAsync(new TelegramMessageLog
                 {
                     TelegramUserId = message.From.Id,
@@ -140,15 +134,10 @@ namespace DanaCopilot.Application.Services
         {
             if (callbackQuery?.From == null) return;
 
-            var response = await _businessService.ProcessCallbackAsync(
-                callbackQuery.From.Id,
-                callbackQuery.Data
-            );
+            var response = await ProcessCallbackAsync(callbackQuery.From.Id, callbackQuery.Data);
 
-            // Correct method for v19+
             await _botClient.AnswerCallbackQuery(
                 callbackQueryId: callbackQuery.Id,
-                text: "Processing...",
                 cancellationToken: CancellationToken.None
             );
 
@@ -162,6 +151,83 @@ namespace DanaCopilot.Application.Services
             }
         }
 
+        private async Task<string> ProcessCommandAsync(long telegramUserId, string command)
+        {
+            var user = await _telegramRepository.GetByTelegramIdAsync(telegramUserId);
+            var isLinked = user?.AppUserId != null;
+
+            return command.ToLower() switch
+            {
+                "/start" => "Welcome to Moji Bot! 👋\n\n" +
+                           "Commands:\n" +
+                           "/dashboard - View your dashboard\n" +
+                           "/status - Check status\n" +
+                           "/help - Show help\n\n" +
+                           (isLinked ? "✅ Your account is linked!" :
+                            "⚠️ Link your account from the web app to access all features."),
+
+                "/dashboard" when isLinked =>
+                    await GetUserDashboardAsync(user.AppUserId, user.FirstName),
+
+                "/dashboard" =>
+                    "Please link your account first. Go to the web app settings to get your link code.",
+
+                "/status" =>
+                    await GetSystemStatusAsync(),
+
+                "/help" =>
+                    "Available commands:\n" +
+                    "/dashboard - View your dashboard\n" +
+                    "/status - Check system status\n" +
+                    "/help - Show this help",
+
+                _ => "Unknown command. Type /help for available commands."
+            };
+        }
+
+        private async Task<string> ProcessMessageAsync(long telegramUserId, string message)
+        {
+            var user = await _telegramRepository.GetByTelegramIdAsync(telegramUserId);
+
+            if (user?.AppUserId == null)
+            {
+                return "Please link your account first. Use the code from the web app settings.";
+            }
+
+            // If you have existing services, use them here:
+            // var result = await _yourService.ProcessUserRequest(user.AppUserId, message);
+            // return result;
+
+            return $"You said: {message}";
+        }
+
+        private async Task<string> ProcessCallbackAsync(long telegramUserId, string callbackData)
+        {
+            return callbackData switch
+            {
+                "action_1" => "You selected Action 1",
+                "action_2" => "You selected Action 2",
+                _ => "Action processed successfully"
+            };
+        }
+
+        private async Task<string> GetUserDashboardAsync(string appUserId, string firstName)
+        {
+            // If you have existing services, use them:
+            // var dashboardData = await _yourService.GetUserDashboardData(appUserId);
+
+            return $"📊 Your Dashboard\n\n" +
+                   $"Welcome back, {firstName}!\n" +
+                   $"This is your dashboard.";
+        }
+
+        private async Task<string> GetSystemStatusAsync()
+        {
+            return $"System Status:\n" +
+                   $"Service: 🟢 Online\n" +
+                   $"Time: {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} UTC";
+        }
+
         public async Task SendMessageAsync(long telegramUserId, string message)
         {
             try
@@ -173,7 +239,6 @@ namespace DanaCopilot.Application.Services
                     return;
                 }
 
-                // Correct method for v19+
                 await _botClient.SendMessage(
                     chatId: long.Parse(user.ChatId),
                     text: message,
@@ -201,7 +266,6 @@ namespace DanaCopilot.Application.Services
 
                 var inlineKeyboard = new InlineKeyboardMarkup(keyboardButtons);
 
-                // Correct method for v19+
                 await _botClient.SendMessage(
                     chatId: long.Parse(user.ChatId),
                     text: message,
@@ -251,7 +315,7 @@ namespace DanaCopilot.Application.Services
 
             var telegramUser = new TelegramUser
             {
-                TelegramUserId = 0,  // Will be updated when user links
+                TelegramUserId = 0,
                 AppUserId = appUserId,
                 LinkCode = code,
                 LinkCodeExpiry = DateTime.UtcNow.AddMinutes(15),
@@ -272,8 +336,8 @@ namespace DanaCopilot.Application.Services
 
         public async Task ProcessNotificationQueueAsync()
         {
-            var pendingNotifications = await _telegramRepository
-                .GetPendingNotificationsAsync(_config.NotificationBatchSize);
+            var batchSize = int.Parse(_configuration["TelegramBot:NotificationBatchSize"] ?? "100");
+            var pendingNotifications = await _telegramRepository.GetPendingNotificationsAsync(batchSize);
 
             foreach (var notification in pendingNotifications)
             {

@@ -36,6 +36,7 @@ using Moji.Services.MLServices;
 using Moji.Services.Models;
 using Moji.Services.Services;
 using System.Text;
+using Telegram.Bot;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -151,15 +152,58 @@ builder.Services.AddScoped<ILocalLlm, OllamaLlm>();
 builder.Services.AddScoped<ICopilotOrchestrator, CopilotOrchestrator>();
 
 //Telegram Services
-builder.Services.AddScoped<ITelegramBotClientFactory, TelegramBotClientFactory>();
-builder.Services.AddScoped<ITelegramBotService, TelegramBotService>();
-builder.Services.AddScoped<IHostedService, TelegramWebhookSetupService>();
+//builder.Services.AddTelegramBotServices(builder.Configuration);
+//builder.Services.AddScoped<ITelegramBotClientFactory, TelegramBotClientFactory>();
+//builder.Services.AddScoped<ITelegramBotService, TelegramBotService>();
+//builder.Services.AddScoped<IHostedService, TelegramWebhookSetupService>();
+//builder.Services.AddScoped<ITelegramRepository, TelegramRepository>();
+//builder.Services.AddScoped<ITelegramBusinessService>();
+
+// ====================================
+// TELEGRAM BOT REGISTRATION START
+// ====================================
+
+// 1. Register TelegramBotConfiguration directly
+builder.Services.AddSingleton(sp =>
+{
+    var config = new DanaCopilot.Domain.Entities.TelegramBotConfiguration
+    {
+        BotToken = builder.Configuration["TelegramBot:BotToken"] ?? "",
+        WebhookUrl = builder.Configuration["TelegramBot:WebhookUrl"] ?? "",
+        BotUsername = builder.Configuration["TelegramBot:BotUsername"] ?? "",
+        UseWebhook = bool.Parse(builder.Configuration["TelegramBot:UseWebhook"] ?? "true"),
+        NotificationBatchSize = int.Parse(builder.Configuration["TelegramBot:NotificationBatchSize"] ?? "100"),
+        MaxRetryAttempts = int.Parse(builder.Configuration["TelegramBot:MaxRetryAttempts"] ?? "3")
+    };
+    return config;
+});
+
+// 2. Register ITelegramBotClient as Singleton
+builder.Services.AddSingleton<ITelegramBotClient>(sp =>
+{
+    var config = sp.GetRequiredService<DanaCopilot.Domain.Entities.TelegramBotConfiguration>();
+    return new TelegramBotClient(config.BotToken);
+});
+
+// 3. Register Repositories
 builder.Services.AddScoped<ITelegramRepository, TelegramRepository>();
+
+// 4. Register Bot Service
+builder.Services.AddScoped<ITelegramBotService, TelegramBotService>();
+
+// 5. Register Hosted Services (Background Services)
+builder.Services.AddHostedService<TelegramWebhookSetupService>();
+
+
+// ====================================
+// TELEGRAM BOT REGISTRATION END
+// ====================================
+
 
 
 builder.Services.AddHttpClient<ILocalLlm, OllamaLlm>(client =>
                        {
-                           client.BaseAddress =new Uri("http://localhost:11434");
+                           client.BaseAddress = new Uri("http://localhost:11434");
                        });
 
 builder.Services.AddScoped<ContextBuilder>();
@@ -167,8 +211,7 @@ builder.Services.AddScoped<ContextBuilder>();
 builder.Services.AddScoped<ConfidenceScorer>();
 
 // Configure prediction settings from appsettings.json
-builder.Services.Configure<PredictionSettings>(
-    builder.Configuration.GetSection("PredictionSettings"));
+builder.Services.Configure<PredictionSettings>(builder.Configuration.GetSection("PredictionSettings"));
 
 var jwtSecret = builder.Configuration["AppSettings:Jwt:Secret"];
 if (string.IsNullOrEmpty(jwtSecret))
