@@ -8,7 +8,7 @@ namespace DanaCopilot.Domain
     {
         public long Id { get; set; }
 
-        public long OrganizationId { get; set; }
+        public int OrganizationId { get; set; }
 
         public string Subject { get; set; }
 

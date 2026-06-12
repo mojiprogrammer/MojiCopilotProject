@@ -20,7 +20,7 @@ namespace DanaCopilot.Persistence.Repositories
             return conversation.Id;
         }
 
-        public async Task<List<Conversation>?> GetAll(long userId)
+        public async Task<List<Conversation>?> GetAll(int? userId)
         {
             return await _db.Conversations
                 .Where(c => c.UserId == userId)

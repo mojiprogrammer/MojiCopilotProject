@@ -8,8 +8,8 @@ namespace DanaCopilot.Application.Contracts.Chat
 {
     public interface IConversationService
     {
-        Task<long> CreateAsync(long userId);
-        Task<List<ConversationDto>> GetAll(long userId);
+        Task<long> CreateAsync(int? userId);
+        Task<List<ConversationDto>> GetAll(int? userId);
 
         Task<ConversationDto?> GetAsync(long conversationId);
 

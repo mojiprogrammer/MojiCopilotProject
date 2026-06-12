@@ -1,5 +1,6 @@
 ﻿using DanaCopilot.Application;
 using DanaCopilot.Application.DTOs.Chat;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace Moji.Controllers.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class CopilotController : ControllerBase
     {
         private readonly ICopilotOrchestrator _orchestrator;

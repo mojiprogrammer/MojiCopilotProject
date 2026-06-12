@@ -20,7 +20,7 @@ namespace DanaCopilot.Application.Services
             _messages = messages;
         }
 
-        public async Task<long> CreateAsync(long userId)
+        public async Task<long> CreateAsync(int? userId)
         {
             var conversation =new Conversation
                 {
@@ -31,7 +31,7 @@ namespace DanaCopilot.Application.Services
             return await _conversations.CreateAsync(conversation);
         }
 
-        public async Task<List<ConversationDto>> GetAll(long userId)
+        public async Task<List<ConversationDto>> GetAll(int? userId)
         {
             var conversations = await _conversations.GetAll(userId);
             return conversations.Select(c => new ConversationDto

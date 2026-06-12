@@ -10,7 +10,12 @@ namespace DanaCopilot.Persistence
         {
         }
 
-        // ================= USERS & ORG =================
+        // ================= Telegram Users =================
+        public DbSet<TelegramUser> TelegramUsers { get; set; }
+        public DbSet<TelegramMessageLog> TelegramMessageLogs { get; set; }
+        public DbSet<TelegramNotificationQueue> TelegramNotificationQueues { get; set; }
+
+        
         public DbSet<Organization> Organizations { get; set; }
         public DbSet<User> Users { get; set; }
 
@@ -31,6 +36,25 @@ namespace DanaCopilot.Persistence
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(DanaAppDbContext).Assembly);
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<TelegramUser>(entity =>
+            {
+                entity.HasIndex(e => e.TelegramUserId).IsUnique();
+                entity.HasIndex(e => e.AppUserId).IsUnique().HasFilter("[AppUserId] IS NOT NULL");
+                entity.HasIndex(e => e.LinkCode).HasFilter("[LinkCode] IS NOT NULL");
+            });
+
+            // TelegramMessageLog configuration
+            modelBuilder.Entity<TelegramMessageLog>(entity =>
+            {
+                entity.HasIndex(e => e.TelegramUserId);
+                entity.HasIndex(e => e.Timestamp);
+            });
+
+            // TelegramNotificationQueue configuration
+            modelBuilder.Entity<TelegramNotificationQueue>(entity =>
+            {
+                entity.HasIndex(e => new { e.IsSent, e.RetryCount });
+            });
         }
     }
 }

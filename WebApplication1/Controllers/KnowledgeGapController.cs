@@ -1,5 +1,6 @@
 ﻿using DanaCopilot.Application.Contracts.Knowledge;
 using DanaCopilot.Application.DTOs.Knowledge;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace Moji.Controllers.Controllers
 {
     [ApiController]
     [Route("api/knowledge-gaps")]
+    [Authorize]
     public class KnowledgeGapsController : ControllerBase
     {
         private readonly IKnowledgeGapAdminService _service;

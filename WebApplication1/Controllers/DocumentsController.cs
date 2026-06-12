@@ -1,6 +1,7 @@
 ﻿using DanaCopilot.Application;
 using DanaCopilot.Application.DTOs.Documents;
 using DanaCopilot.Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moji.Controllers.Models;
@@ -9,6 +10,7 @@ namespace Moji.Controllers.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class DocumentsController : ControllerBase
     {
         private readonly IDocumentService _service;

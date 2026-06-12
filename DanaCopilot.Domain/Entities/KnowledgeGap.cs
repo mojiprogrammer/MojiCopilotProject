@@ -9,7 +9,7 @@ namespace DanaCopilot.Domain
     public class KnowledgeGap
     {
         public long Id { get; set; }
-        public long OrganizationId { get; set; }
+        public int OrganizationId { get; set; }
 
         public string Question { get; set; }
 

@@ -12,7 +12,7 @@ namespace DanaCopilot.Domain.Entities
     {
         [Key]
         public long Id { get; set; }
-        public long OrganizationId { get; set; }
+        public int OrganizationId { get; set; }
         public string Title { get; set; }
         public string FileExtension { get; set; } = string.Empty;
         public long FileSize { get; set; }

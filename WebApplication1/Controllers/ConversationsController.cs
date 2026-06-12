@@ -1,6 +1,5 @@
-﻿using DanaCopilot.Application;
-using DanaCopilot.Application.Contracts.Chat;
-using Microsoft.AspNetCore.Http;
+﻿using DanaCopilot.Application.Contracts.Chat;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -8,6 +7,7 @@ namespace Moji.Controllers.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ConversationsController : ControllerBase
     {
         private readonly IConversationService _service;
@@ -18,8 +18,9 @@ namespace Moji.Controllers.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(long userId)
+        public async Task<IActionResult> Create()
         {
+            var userId = this.GetUserIdFromClaims();
             var id = await _service.CreateAsync(userId);
             return Ok(id);
         }
@@ -27,7 +28,7 @@ namespace Moji.Controllers.Controllers
         [HttpGet("getAll")]
         public async Task<IActionResult> GetAll()
         {
-            var userId = 17;
+            var userId = this.GetUserIdFromClaims();
             var conversations = await _service.GetAll(userId);
             return Ok(conversations);
         }
@@ -49,8 +50,7 @@ namespace Moji.Controllers.Controllers
 
         private int? GetUserIdFromClaims()
         {
-            var userIdClaim = User.FindFirst("UserId")?.Value
-                              ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userIdClaim = User.FindFirst("UserId")?.Value ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (string.IsNullOrEmpty(userIdClaim))
                 return null;

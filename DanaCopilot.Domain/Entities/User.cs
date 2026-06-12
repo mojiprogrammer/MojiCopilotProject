@@ -9,7 +9,7 @@ namespace DanaCopilot.Domain
     {
         public long Id { get; set; }
 
-        public long OrganizationId { get; set; }
+        public int OrganizationId { get; set; }
 
         public string FullName { get; set; }
         public string Email { get; set; }

@@ -7,6 +7,7 @@ using DanaCopilot.Application.Contracts.Chat;
 using DanaCopilot.Application.Contracts.Knowledge;
 using DanaCopilot.Application.Contracts.Repositories.Interfaces;
 using DanaCopilot.Application.Contracts.Retrieval;
+using DanaCopilot.Application.Contracts.Telegram;
 using DanaCopilot.Application.Services;
 using DanaCopilot.Application.UseCases.Copilot;
 using DanaCopilot.BackgroundJobs.Services;
@@ -148,6 +149,12 @@ builder.Services.AddScoped<PromptBuilder>();
 builder.Services.AddScoped<ILocalLlm, OllamaLlm>();
 
 builder.Services.AddScoped<ICopilotOrchestrator, CopilotOrchestrator>();
+
+//Telegram Services
+builder.Services.AddScoped<ITelegramBotClientFactory, TelegramBotClientFactory>();
+builder.Services.AddScoped<ITelegramBotService, TelegramBotService>();
+builder.Services.AddScoped<IHostedService, TelegramWebhookSetupService>();
+builder.Services.AddScoped<ITelegramRepository, TelegramRepository>();
 
 
 builder.Services.AddHttpClient<ILocalLlm, OllamaLlm>(client =>
