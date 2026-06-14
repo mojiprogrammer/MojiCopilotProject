@@ -17,7 +17,7 @@ namespace DanaCopilot.Domain.Entities
         public string FileExtension { get; set; } = string.Empty;
         public long FileSize { get; set; }
         public string FileName { get; set; }
-        public long UploadedByUserId { get; set; }
+        public int? UploadedByUserId { get; set; }
         public DateTime UploadedAt { get; set; }
         public string FilePath { get; set; }
         public DocumentStatus Status { get; set; }

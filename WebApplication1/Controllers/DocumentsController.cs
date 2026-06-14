@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moji.Controllers.Models;
+using System.Security.Claims;
 
 namespace Moji.Controllers.Controllers
 {
@@ -28,7 +29,7 @@ namespace Moji.Controllers.Controllers
                 Title = request.Title,
                 FileName = request.File.FileName,
                 FileStream = request.File.OpenReadStream(),
-                UserId = 17,
+                UserId = GetUserIdFromClaims(),
                 ConversationId = request.ConversationId
 
             };
@@ -49,6 +50,16 @@ namespace Moji.Controllers.Controllers
             var doc = await _service.GetAsync(id);
 
             return doc == null ? NotFound() : Ok(doc);
+        }
+
+        private int? GetUserIdFromClaims()
+        {
+            var userIdClaim = User.FindFirst("UserId")?.Value ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userIdClaim))
+                return null;
+
+            return int.Parse(userIdClaim);
         }
     }
 }
