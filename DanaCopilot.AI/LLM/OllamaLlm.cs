@@ -12,16 +12,16 @@ namespace DanaCopilot.AI.LLM
             _httpClient = httpClient;
         }
 
-        public async Task<LlmResponse> GenerateAsync(LlmRequest request,CancellationToken cancellationToken = default)
+        public async Task<LlmResponse> GenerateAsync(LlmRequest request, CancellationToken cancellationToken = default)
         {
             var payload = new
             {
-                model = "llama3.2",  
+                model = "llama3.2",
                 prompt = request.Prompt,
                 stream = false
             };
 
-            var response =await _httpClient.PostAsJsonAsync("/api/generate",payload,cancellationToken);
+            var response = await _httpClient.PostAsJsonAsync("/api/generate", payload, cancellationToken);
 
             response.EnsureSuccessStatusCode();
 
@@ -36,6 +36,6 @@ namespace DanaCopilot.AI.LLM
             };
         }
 
-      
+
     }
 }

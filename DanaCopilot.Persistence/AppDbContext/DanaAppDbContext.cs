@@ -38,7 +38,7 @@ namespace DanaCopilot.Persistence
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<TelegramUser>(entity =>
             {
-                entity.HasIndex(e => e.TelegramUserId).IsUnique();
+               // entity.HasIndex(e => e.TelegramUserId).IsUnique();
                 entity.HasIndex(e => e.AppUserId).IsUnique().HasFilter("[AppUserId] IS NOT NULL");
                 entity.HasIndex(e => e.LinkCode).HasFilter("[LinkCode] IS NOT NULL");
             });

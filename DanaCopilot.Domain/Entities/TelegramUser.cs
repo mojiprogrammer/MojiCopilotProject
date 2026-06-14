@@ -12,7 +12,7 @@ namespace DanaCopilot.Domain.Entities
         public int Id { get; set; }
 
         // Telegram specific fields
-        public long TelegramUserId { get; set; }
+        //public long TelegramUserId { get; set; }
         public string? ChatId { get; set; }
         public string? Username { get; set; }
         public string? FirstName { get; set; }
@@ -27,7 +27,7 @@ namespace DanaCopilot.Domain.Entities
         public DateTime? LastInteraction { get; set; }
 
         // Navigation property if you have User model
-        [ForeignKey("AppUserId")]
-        public virtual User? AppUser { get; set; }
+        //[ForeignKey("AppUserId")]
+        //public virtual User? AppUser { get; set; }
     }
 }
