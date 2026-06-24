@@ -14,10 +14,7 @@ namespace DanaCopilot.Application.Services
 
         private readonly IDocumentProcessingService _processor;
 
-        public DocumentService(
-            IDocumentRepository documents,
-            IFileStorage storage,
-            IDocumentProcessingService processor)
+        public DocumentService(IDocumentRepository documents,IFileStorage storage,IDocumentProcessingService processor)
         {
             _documents = documents;
             _storage = storage;
@@ -48,11 +45,9 @@ namespace DanaCopilot.Application.Services
             return id;
         }
 
-        public async Task<DocumentDto?> GetAsync(
-            long documentId)
+        public async Task<DocumentDto?> GetAsync(long documentId)
         {
-            var document =
-                await _documents.GetByIdAsync(documentId);
+            var document = await _documents.GetByIdAsync(documentId);
 
             if (document == null)
                 return null;
@@ -68,18 +63,15 @@ namespace DanaCopilot.Application.Services
 
         public async Task<List<DocumentDto>> GetAllAsync()
         {
-            var documents =
-                await _documents.GetAllAsync();
+            var documents = await _documents.GetAllAsync();
 
-            return documents
-                .Select(x => new DocumentDto
-                {
-                    Id = x.Id,
-                    Title = x.Title,
-                    FileName = x.FileName,
-                    Status = x.Status
-                })
-                .ToList();
+            return documents.Select(x => new DocumentDto
+            {
+                Id = x.Id,
+                Title = x.Title,
+                FileName = x.FileName,
+                Status = x.Status
+            }).ToList();
         }
     }
 }
