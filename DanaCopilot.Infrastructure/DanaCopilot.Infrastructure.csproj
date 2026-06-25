@@ -10,23 +10,16 @@
     <Compile Remove="Interfaces\IConversationService.cs" />
     <Compile Remove="Interfaces\IDocumentService.cs" />
     <Compile Remove="Interfaces\IMessageService.cs" />
-    <Compile Remove="Services\Knowledge\ConversationService.cs" />
-    <Compile Remove="Services\Knowledge\DocumentService.cs" />
-    <Compile Remove="Services\Knowledge\MessageService.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\DanaCopilot.Application\DanaCopilot.Application.csproj" />
-    <ProjectReference Include="..\DanaCopilot.Persistence\DanaCopilot.Persistence.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Extensions\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.2.0" />
+    <PackageReference Include="Dapper" Version="2.1.79" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DanaCopilot.Domain\DanaCopilot.Domain.csproj" />
   </ItemGroup>
 
 </Project>

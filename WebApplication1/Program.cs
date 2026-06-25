@@ -1,25 +1,5 @@
 
-using DanaCopilot.AI.LLM;
-using DanaCopilot.AI.OCR;
-using DanaCopilot.Application;
-using DanaCopilot.Application.Contracts.AI;
-using DanaCopilot.Application.Contracts.Chat;
-using DanaCopilot.Application.Contracts.Knowledge;
-using DanaCopilot.Application.Contracts.Repositories.Interfaces;
-using DanaCopilot.Application.Contracts.Retrieval;
-using DanaCopilot.Application.Contracts.Telegram;
-using DanaCopilot.Application.Services;
-using DanaCopilot.Application.UseCases.Copilot;
-using DanaCopilot.BackgroundJobs.Services;
-using DanaCopilot.Infrastructure.Security;
 using DanaCopilot.Infrastructure.Services;
-using DanaCopilot.Persistence;
-using DanaCopilot.Persistence.Repositories;
-using DanaCopilot.Persistence.Repositories.Interfaces;
-using DanaCopilot.Retrieval.Context;
-using DanaCopilot.Retrieval.Contracts;
-using DanaCopilot.Retrieval.Scoring;
-using DanaCopilot.Retrieval.Search;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -82,10 +62,7 @@ builder.Services.AddSwaggerGen(c =>
 
 // Database and Dependency Injection
 builder.Services.AddScoped<AppDbContext>();
-builder.Services.AddDbContext<DanaAppDbContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MojiCopilotConnection"));
-});
+
 
 //builder.Services.AddScoped<DanaAppDbContext>();
 
@@ -125,31 +102,7 @@ builder.Services.AddHttpClient();
 
 //DanaCopilot Services
 
-builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
-builder.Services.AddScoped<IMessageRepository, MessageRepository>();
-builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
-builder.Services.AddScoped<IKnowledgeGapRepository, KnowledgeGapRepository>();
-builder.Services.AddScoped<IDocumentChunkRepository, DocumentChunkRepository>();
-builder.Services.AddScoped<ITicketRepository, TicketRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IAnswerSourceRepository, AnswerSourceRepository>();
 
-builder.Services.AddScoped<IFileStorage, LocalFileStorage>();
-builder.Services.AddScoped<IDanaPasswordHasher, DanaPasswordHasher>();
-builder.Services.AddScoped<IConversationService, ConversationService>();
-builder.Services.AddScoped<IMessageService, MessageService>();
-builder.Services.AddScoped<IKnowledgeGapService, KnowledgeGapService>();
-builder.Services.AddScoped<IDocumentService, DocumentService>();
-builder.Services.AddScoped<ISqlSearchService, SqlSearchService>();
-builder.Services.AddScoped<IRetrievalService, RetrievalService>();
-builder.Services.AddScoped<IDocumentProcessingService, DocumentProcessingService>();
-builder.Services.AddScoped<IOcrService, TesseractOcrService>();
-builder.Services.AddScoped<ITextChunker, TextChunker>();
-
-builder.Services.AddScoped<PromptBuilder>();
-builder.Services.AddScoped<ILocalLlm, OllamaLlm>();
-
-builder.Services.AddScoped<ICopilotOrchestrator, CopilotOrchestrator>();
 
 //Telegram Services
 //builder.Services.AddTelegramBotServices(builder.Configuration);
@@ -184,31 +137,6 @@ builder.Services.AddSingleton<ITelegramBotClient>(sp =>
     var config = sp.GetRequiredService<DanaCopilot.Domain.Entities.TelegramBotConfiguration>();
     return new TelegramBotClient(config.BotToken);
 });
-
-// 3. Register Repositories
-builder.Services.AddScoped<ITelegramRepository, TelegramRepository>();
-
-// 4. Register Bot Service
-builder.Services.AddScoped<ITelegramBotService, TelegramBotService>();
-
-// 5. Register Hosted Services (Background Services)
-builder.Services.AddHostedService<TelegramWebhookSetupService>();
-
-
-// ====================================
-// TELEGRAM BOT REGISTRATION END
-// ====================================
-
-
-
-builder.Services.AddHttpClient<ILocalLlm, OllamaLlm>(client =>
-                       {
-                           client.BaseAddress = new Uri("http://localhost:11434");
-                       });
-
-builder.Services.AddScoped<ContextBuilder>();
-
-builder.Services.AddScoped<ConfidenceScorer>();
 
 // Configure prediction settings from appsettings.json
 builder.Services.Configure<PredictionSettings>(builder.Configuration.GetSection("PredictionSettings"));
