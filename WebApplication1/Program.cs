@@ -12,7 +12,6 @@ using Moji.DataService.Repositories.ModelRepositories;
 using Moji.Services.Helper;
 using Moji.Services.Helper.Implement;
 using Moji.Services.Interfaces;
-using Moji.Services.MLServices;
 using Moji.Services.Models;
 using Moji.Services.Services;
 using System.Text;
@@ -78,10 +77,6 @@ builder.Services.AddDbContext<OfflineDbContext>(options =>
 builder.Services.AddScoped<IUserRepositoryDataService, UserRepositoryDataService>();
 builder.Services.AddScoped<IUserProfileRepositoryDataService, UserProfileRepositoryDataService>();
 
-// Register prediction repositories and services
-builder.Services.AddScoped<IPredictionRepository, PredictionRepository>();
-builder.Services.AddScoped<IPredictionService, PredictionService>();
-
 builder.Services.AddScoped<IMenuRepositoryDataService, MenuRepositoryDataService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
 
@@ -97,7 +92,6 @@ builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
 builder.Services.AddScoped<IFileUploadHelper, FileUploadHelper>();
 
 // Register background service for auto-training ML models
-builder.Services.AddHostedService<ModelTrainingBackgroundService>();
 builder.Services.AddHttpClient();
 
 //DanaCopilot Services

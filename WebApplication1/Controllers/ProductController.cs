@@ -1,6 +1,5 @@
 ﻿using DanaCopilot.Application.Services;
 using DanaCopilot.Domain.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Moji.Controllers.Controllers
