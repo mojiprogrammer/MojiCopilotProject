@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DependencyInjection.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
 		<PackageReference Include="Dapper" Version="2.1.28" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="3.1.32" />
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.0" />
