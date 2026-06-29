@@ -26,9 +26,9 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "Moji API",
+        Title = "Dana API",
         Version = "v1",
-        Description = "Moji Copilot Application API with JWT Authentication and Price Prediction"
+        Description = "Dana Application API with JWT Authentication"
     });
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -147,8 +147,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["AppSettings:Jwt:Issuer"] ?? "MojiAPI",
-            ValidAudience = builder.Configuration["AppSettings:Jwt:Audience"] ?? "MojiClient",
+            ValidIssuer = builder.Configuration["AppSettings:Jwt:Issuer"] ?? "DanaAPI",
+            ValidAudience = builder.Configuration["AppSettings:Jwt:Audience"] ?? "DanaClient",
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(jwtSecret))
         };
@@ -199,7 +199,7 @@ else
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Moji API V1");
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Dana API V1");
         c.RoutePrefix = "";
     });
     app.UseExceptionHandler("/Home/Error");
