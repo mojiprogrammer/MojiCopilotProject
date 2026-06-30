@@ -1,3 +1,7 @@
+using DanaCopilot.Application.Services;
+using DanaCopilot.Infrastructure;
+using DanaCopilot.Infrastructure.Interfaces;
+using DanaCopilot.Infrastructure.Services.TestLine;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -88,24 +92,13 @@ builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
 
 builder.Services.AddScoped<IFileUploadHelper, FileUploadHelper>();
 
+//TestLineServices
+builder.Services.AddScoped<IDbConnectionFactory, SqlConnectionFactory>();
+builder.Services.AddScoped<LineRepository>();
+builder.Services.AddScoped<LineService>();
+
 // Register background service for auto-training ML models
 builder.Services.AddHttpClient();
-
-//DanaCopilot Services
-
-
-
-//Telegram Services
-//builder.Services.AddTelegramBotServices(builder.Configuration);
-//builder.Services.AddScoped<ITelegramBotClientFactory, TelegramBotClientFactory>();
-//builder.Services.AddScoped<ITelegramBotService, TelegramBotService>();
-//builder.Services.AddScoped<IHostedService, TelegramWebhookSetupService>();
-//builder.Services.AddScoped<ITelegramRepository, TelegramRepository>();
-//builder.Services.AddScoped<ITelegramBusinessService>();
-
-// ====================================
-// TELEGRAM BOT REGISTRATION START
-// ====================================
 
 // 1. Register TelegramBotConfiguration directly
 builder.Services.AddSingleton(sp =>

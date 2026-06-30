@@ -12,7 +12,7 @@ namespace Moji.DataService
         public AppDbContext(IConfiguration configuration)
         {
             _configuration = configuration;
-            _connectionString = _configuration.GetConnectionString("MojiCopilotConnection") ?? throw new InvalidOperationException("Connection string 'MojiCopilotConnection' not found.");
+            _connectionString = _configuration.GetConnectionString("DanaCopilotConnection") ?? throw new InvalidOperationException("Connection string 'DanaCopilotConnection' not found.");
         }
 
         public IDbConnection CreateConnection()

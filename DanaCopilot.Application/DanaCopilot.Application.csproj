@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DanaCopilot.Contracts\DanaCopilot.Contracts.csproj" />
     <ProjectReference Include="..\DanaCopilot.Domain\DanaCopilot.Domain.csproj" />
     <ProjectReference Include="..\DanaCopilot.Infrastructure\DanaCopilot.Infrastructure.csproj" />
   </ItemGroup>
