@@ -1,7 +1,8 @@
-using DanaCopilot.Application.Services;
-using DanaCopilot.Infrastructure;
-using DanaCopilot.Infrastructure.Interfaces;
-using DanaCopilot.Infrastructure.Services.TestLine;
+using DanaCopilot.Application.Modules.Core.Interfaces;
+using DanaCopilot.Application.Modules.Core.Services;
+using DanaCopilot.Infrastructure.Connection;
+using DanaCopilot.Infrastructure.DataAccess.Implements;
+using DanaCopilot.Infrastructure.DataAccess.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -17,6 +18,7 @@ using Moji.Services.Models;
 using Moji.Services.Services;
 using System.Text;
 using Telegram.Bot;
+using TestSystem.Application.Modules.Configuration.Line.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -93,9 +95,15 @@ builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
 builder.Services.AddScoped<IFileUploadHelper, FileUploadHelper>();
 
 //TestLineServices
-builder.Services.AddScoped<IDbConnectionFactory, SqlConnectionFactory>();
-builder.Services.AddScoped<LineRepository>();
-builder.Services.AddScoped<LineService>();
+builder.Services.AddSingleton<IDbConnectionFactory, SqlConnectionFactory>();
+builder.Services.AddScoped<ILineDataAccess, LineDataAccess>();
+builder.Services.AddScoped<ILineApplicationService, LineApplicationService>();
+builder.Services.AddScoped<IProductCategoryDataAccess, ProductCategoryDataAccess>();
+builder.Services.AddScoped<IProductCategoryApplicationService, ProductCategoryApplicationService>();
+builder.Services.AddScoped<IProductDataAccess, ProductDataAccess>();
+builder.Services.AddScoped<IProductApplicationService, ProductApplicationService>();
+builder.Services.AddScoped<IPLCTypeDataAccess, PLCTypeDataAccess>();
+builder.Services.AddScoped<IPLCTypeApplicationService, PLCTypeApplicationService>();
 
 // Register background service for auto-training ML models
 builder.Services.AddHttpClient();

@@ -1,9 +1,8 @@
-﻿using DanaCopilot.Infrastructure.Interfaces;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 
-namespace DanaCopilot.Infrastructure
+namespace DanaCopilot.Infrastructure.Connection
 {
     public class SqlConnectionFactory : IDbConnectionFactory
     {

@@ -1,6 +1,5 @@
-﻿
-using DanaCopilot.Application.Modules.Core.Interfaces;
-using DanaCopilot.Contracts.Line.Requests;
+﻿using DanaCopilot.Application.Modules.Core.Interfaces;
+using DanaCopilot.Contracts.PLCType.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,11 +8,11 @@ namespace Moji.Controllers.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class LineController : ControllerBase
+    public class PLCTypesController : ControllerBase
     {
-        private readonly ILineApplicationService _service;
+        private readonly IPLCTypeApplicationService _service;
 
-        public LineController(ILineApplicationService service)
+        public PLCTypesController(IPLCTypeApplicationService service)
         {
             _service = service;
         }
@@ -22,7 +21,6 @@ namespace Moji.Controllers.Controllers
         public async Task<IActionResult> GetAll()
         {
             var result = await _service.GetAllAsync();
-
             return Ok(result);
         }
 
@@ -38,36 +36,28 @@ namespace Moji.Controllers.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateLineRequest request)
+        public async Task<IActionResult> Create(CreatePLCTypeRequest request)
         {
             var id = await _service.CreateAsync(request);
 
             return CreatedAtAction(
                 nameof(GetById),
-                new
-                {
-                    id
-                }, id);
+                new { id },
+                id);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(
-            [FromBody] UpdateLineRequest request)
+        public async Task<IActionResult> Update(UpdatePLCTypeRequest request)
         {
             await _service.UpdateAsync(request);
-
             return NoContent();
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(
-            [FromBody] DeleteLineRequest request)
+        public async Task<IActionResult> Delete(DeletePLCTypeRequest request)
         {
             await _service.DeleteAsync(request);
-
             return NoContent();
         }
-
-
     }
 }

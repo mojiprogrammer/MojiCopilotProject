@@ -1,7 +1,7 @@
-﻿
-using DanaCopilot.Application.Modules.Core.Interfaces;
-using DanaCopilot.Contracts.Line.Requests;
+﻿using DanaCopilot.Application.Modules.Core.Interfaces;
+using DanaCopilot.Contracts.ProductCategory.Requests;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Moji.Controllers.Controllers
@@ -9,11 +9,11 @@ namespace Moji.Controllers.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class LineController : ControllerBase
+    public class ProductCategoriesController : ControllerBase
     {
-        private readonly ILineApplicationService _service;
+        private readonly IProductCategoryApplicationService _service;
 
-        public LineController(ILineApplicationService service)
+        public ProductCategoriesController(IProductCategoryApplicationService service)
         {
             _service = service;
         }
@@ -38,21 +38,18 @@ namespace Moji.Controllers.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateLineRequest request)
+        public async Task<IActionResult> Create([FromBody] CreateProductCategoryRequest request)
         {
             var id = await _service.CreateAsync(request);
 
             return CreatedAtAction(
                 nameof(GetById),
-                new
-                {
-                    id
-                }, id);
+                new { id },
+                id);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(
-            [FromBody] UpdateLineRequest request)
+        public async Task<IActionResult> Update([FromBody] UpdateProductCategoryRequest request)
         {
             await _service.UpdateAsync(request);
 
@@ -60,14 +57,11 @@ namespace Moji.Controllers.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(
-            [FromBody] DeleteLineRequest request)
+        public async Task<IActionResult> Delete([FromBody] DeleteProductCategoryRequest request)
         {
             await _service.DeleteAsync(request);
 
             return NoContent();
         }
-
-
     }
 }

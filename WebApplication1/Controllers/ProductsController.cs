@@ -1,6 +1,5 @@
-﻿
-using DanaCopilot.Application.Modules.Core.Interfaces;
-using DanaCopilot.Contracts.Line.Requests;
+﻿using DanaCopilot.Application.Modules.Core.Interfaces;
+using DanaCopilot.Contracts.Product.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,11 +8,11 @@ namespace Moji.Controllers.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class LineController : ControllerBase
+    public class ProductsController : ControllerBase
     {
-        private readonly ILineApplicationService _service;
+        private readonly IProductApplicationService _service;
 
-        public LineController(ILineApplicationService service)
+        public ProductsController(IProductApplicationService service)
         {
             _service = service;
         }
@@ -22,7 +21,6 @@ namespace Moji.Controllers.Controllers
         public async Task<IActionResult> GetAll()
         {
             var result = await _service.GetAllAsync();
-
             return Ok(result);
         }
 
@@ -38,36 +36,29 @@ namespace Moji.Controllers.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateLineRequest request)
+        public async Task<IActionResult> Create(CreateProductRequest request)
         {
             var id = await _service.CreateAsync(request);
 
             return CreatedAtAction(
                 nameof(GetById),
-                new
-                {
-                    id
-                }, id);
+                new { id },
+                id);
         }
 
+
         [HttpPut]
-        public async Task<IActionResult> Update(
-            [FromBody] UpdateLineRequest request)
+        public async Task<IActionResult> Update(UpdateProductRequest request)
         {
             await _service.UpdateAsync(request);
-
             return NoContent();
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(
-            [FromBody] DeleteLineRequest request)
+        public async Task<IActionResult> Delete(DeleteProductRequest request)
         {
             await _service.DeleteAsync(request);
-
             return NoContent();
         }
-
-
     }
 }
