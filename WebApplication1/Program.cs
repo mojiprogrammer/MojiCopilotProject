@@ -2,6 +2,8 @@ using DanaCopilot.Application.Modules.Configuration.Interfaces;
 using DanaCopilot.Application.Modules.Configuration.Services;
 using DanaCopilot.Application.Modules.Core.Interfaces;
 using DanaCopilot.Application.Modules.Core.Services;
+using DanaCopilot.Application.Modules.RunTime.Interfaces;
+using DanaCopilot.Application.Modules.RunTime.Services;
 using DanaCopilot.Infrastructure.Connection;
 using DanaCopilot.Infrastructure.DataAccess.Implements;
 using DanaCopilot.Infrastructure.DataAccess.Interfaces;
@@ -112,6 +114,12 @@ builder.Services.AddScoped<IStationDataAccess, StationDataAccess>();
 builder.Services.AddScoped<IStationApplicationService, StationApplicationService>();
 builder.Services.AddScoped<IStationPLCDataAccess, StationPLCDataAccess>();
 builder.Services.AddScoped<IStationPLCApplicationService, StationPLCApplicationService>();
+builder.Services.AddScoped<IParameterDataAccess, ParameterDataAccess>();
+builder.Services.AddScoped<IParameterApplicationService, ParameterApplicationService>();
+builder.Services.AddScoped<IParameterMappingDataAccess, ParameterMappingDataAccess>();
+builder.Services.AddScoped<IParameterMappingApplicationService, ParameterMappingApplicationService>();
+builder.Services.AddScoped<IAlarmDefinitionDataAccess, AlarmDefinitionDataAccess>();
+builder.Services.AddScoped<IAlarmDefinitionApplicationService, AlarmDefinitionApplicationService>();
 
 // Register background service for auto-training ML models
 builder.Services.AddHttpClient();
