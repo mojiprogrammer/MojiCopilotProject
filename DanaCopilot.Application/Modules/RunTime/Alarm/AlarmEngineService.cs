@@ -1,7 +1,4 @@
 ﻿using DanaCopilot.Infrastructure.DataAccess.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DanaCopilot.Application.Modules.RunTime.Alarm
 {
