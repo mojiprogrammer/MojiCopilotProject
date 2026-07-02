@@ -1,3 +1,5 @@
+using DanaCopilot.Application.Modules.Configuration.Interfaces;
+using DanaCopilot.Application.Modules.Configuration.Services;
 using DanaCopilot.Application.Modules.Core.Interfaces;
 using DanaCopilot.Application.Modules.Core.Services;
 using DanaCopilot.Infrastructure.Connection;
@@ -14,10 +16,8 @@ using Moji.DataService.Repositories.ModelRepositories;
 using Moji.Services.Helper;
 using Moji.Services.Helper.Implement;
 using Moji.Services.Interfaces;
-using Moji.Services.Models;
 using Moji.Services.Services;
 using System.Text;
-using Telegram.Bot;
 using TestSystem.Application.Modules.Configuration.Line.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -104,34 +104,17 @@ builder.Services.AddScoped<IProductDataAccess, ProductDataAccess>();
 builder.Services.AddScoped<IProductApplicationService, ProductApplicationService>();
 builder.Services.AddScoped<IPLCTypeDataAccess, PLCTypeDataAccess>();
 builder.Services.AddScoped<IPLCTypeApplicationService, PLCTypeApplicationService>();
+builder.Services.AddScoped<IPLCConfigurationDefinitionDataAccess, PLCConfigurationDefinitionDataAccess>();
+builder.Services.AddScoped<IPLCConfigurationDefinitionApplicationService, PLCConfigurationDefinitionApplicationService>();
+builder.Services.AddScoped<IPLCConfigurationDataAccess, PLCConfigurationDataAccess>();
+builder.Services.AddScoped<IPLCConfigurationApplicationService, PLCConfigurationApplicationService>();
+builder.Services.AddScoped<IStationDataAccess, StationDataAccess>();
+builder.Services.AddScoped<IStationApplicationService, StationApplicationService>();
+builder.Services.AddScoped<IStationPLCDataAccess, StationPLCDataAccess>();
+builder.Services.AddScoped<IStationPLCApplicationService, StationPLCApplicationService>();
 
 // Register background service for auto-training ML models
 builder.Services.AddHttpClient();
-
-// 1. Register TelegramBotConfiguration directly
-builder.Services.AddSingleton(sp =>
-{
-    var config = new DanaCopilot.Domain.Entities.TelegramBotConfiguration
-    {
-        BotToken = builder.Configuration["TelegramBot:BotToken"] ?? "",
-        WebhookUrl = builder.Configuration["TelegramBot:WebhookUrl"] ?? "",
-        BotUsername = builder.Configuration["TelegramBot:BotUsername"] ?? "",
-        UseWebhook = bool.Parse(builder.Configuration["TelegramBot:UseWebhook"] ?? "true"),
-        NotificationBatchSize = int.Parse(builder.Configuration["TelegramBot:NotificationBatchSize"] ?? "100"),
-        MaxRetryAttempts = int.Parse(builder.Configuration["TelegramBot:MaxRetryAttempts"] ?? "3")
-    };
-    return config;
-});
-
-// 2. Register ITelegramBotClient as Singleton
-builder.Services.AddSingleton<ITelegramBotClient>(sp =>
-{
-    var config = sp.GetRequiredService<DanaCopilot.Domain.Entities.TelegramBotConfiguration>();
-    return new TelegramBotClient(config.BotToken);
-});
-
-// Configure prediction settings from appsettings.json
-builder.Services.Configure<PredictionSettings>(builder.Configuration.GetSection("PredictionSettings"));
 
 var jwtSecret = builder.Configuration["AppSettings:Jwt:Secret"];
 if (string.IsNullOrEmpty(jwtSecret))
