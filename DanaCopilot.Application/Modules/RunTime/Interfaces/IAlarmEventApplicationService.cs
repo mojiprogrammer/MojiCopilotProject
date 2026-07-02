@@ -1,10 +1,9 @@
 ﻿using DanaCopilot.Contracts.AlarmEvent.Requests;
 using DanaCopilot.Contracts.AlarmEvent.Responses;
 
-namespace DanaCopilot.Infrastructure.DataAccess.Interfaces
+namespace DanaCopilot.Application.Modules.RunTime.Interfaces
 {
-
-    public interface IAlarmEventDataAccess
+    public interface IAlarmEventApplicationService
     {
         Task<long> InsertAsync(object request);
 

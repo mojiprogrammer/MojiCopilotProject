@@ -120,6 +120,8 @@ builder.Services.AddScoped<IParameterMappingDataAccess, ParameterMappingDataAcce
 builder.Services.AddScoped<IParameterMappingApplicationService, ParameterMappingApplicationService>();
 builder.Services.AddScoped<IAlarmDefinitionDataAccess, AlarmDefinitionDataAccess>();
 builder.Services.AddScoped<IAlarmDefinitionApplicationService, AlarmDefinitionApplicationService>();
+builder.Services.AddScoped<IAlarmEventDataAccess, AlarmEventDataAccess>();
+builder.Services.AddScoped<IAlarmEventApplicationService, AlarmEventApplicationService>();
 
 // Register background service for auto-training ML models
 builder.Services.AddHttpClient();
