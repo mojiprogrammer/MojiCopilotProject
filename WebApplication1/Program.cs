@@ -123,6 +123,12 @@ builder.Services.AddScoped<IRejectReasonDataAccess, RejectReasonDataAccess>();
 builder.Services.AddScoped<IRejectReasonApplicationService, RejectReasonApplicationService>();
 builder.Services.AddScoped<IReworkReasonDataAccess, ReworkReasonDataAccess>();
 builder.Services.AddScoped<IReworkReasonApplicationService, ReworkReasonApplicationService>();
+builder.Services.AddScoped<IShiftDataAccess, ShiftDataAccess>();
+builder.Services.AddScoped<IShiftScheduleDataAccess, ShiftScheduleDataAccess>();
+builder.Services.AddScoped<IShiftCalendarDataAccess, ShiftCalendarDataAccess>();
+builder.Services.AddScoped<IShiftApplicationService, ShiftApplicationService>();
+builder.Services.AddScoped<IShiftScheduleApplicationService, ShiftScheduleApplicationService>();
+builder.Services.AddScoped<IShiftCalendarApplicationService, ShiftCalendarApplicationService>();
 
 // Register background service for auto-training ML models
 builder.Services.AddHttpClient();
