@@ -2,6 +2,8 @@ using DanaCopilot.Application.Modules.Configuration.Interfaces;
 using DanaCopilot.Application.Modules.Configuration.Services;
 using DanaCopilot.Application.Modules.Core.Interfaces;
 using DanaCopilot.Application.Modules.Core.Services;
+using DanaCopilot.Application.Modules.Oee.Interfaces;
+using DanaCopilot.Application.Modules.Oee.Services;
 using DanaCopilot.Application.Modules.RunTime.Interfaces;
 using DanaCopilot.Application.Modules.RunTime.Services;
 using DanaCopilot.Infrastructure.Connection;
@@ -67,12 +69,8 @@ builder.Services.AddSwaggerGen(c =>
 // Database and Dependency Injection
 builder.Services.AddScoped<AppDbContext>();
 
-
-//builder.Services.AddScoped<DanaAppDbContext>();
-
 // Register Offline DbContext (SQLite) - For prediction module
-var offlineConnectionString = builder.Configuration.GetConnectionString("OfflineConnection")
-    ?? "Data Source=offline_prediction.db";
+var offlineConnectionString = builder.Configuration.GetConnectionString("OfflineConnection") ?? "Data Source=offline_prediction.db";
 builder.Services.AddDbContext<OfflineDbContext>(options =>
 {
     options.UseSqlite(offlineConnectionString);
@@ -118,6 +116,13 @@ builder.Services.AddScoped<IAlarmDefinitionDataAccess, AlarmDefinitionDataAccess
 builder.Services.AddScoped<IAlarmDefinitionApplicationService, AlarmDefinitionApplicationService>();
 builder.Services.AddScoped<IAlarmEventDataAccess, AlarmEventDataAccess>();
 builder.Services.AddScoped<IAlarmEventApplicationService, AlarmEventApplicationService>();
+builder.Services.AddScoped<IOeeCalculationService, OeeCalculationService>();
+builder.Services.AddScoped<IProductionExecutionDataAccess, ProductionExecutionDataAccess>();
+builder.Services.AddScoped<IProductionExecutionApplicationService, ProductionExecutionApplicationService>();
+builder.Services.AddScoped<IRejectReasonDataAccess, RejectReasonDataAccess>();
+builder.Services.AddScoped<IRejectReasonApplicationService, RejectReasonApplicationService>();
+builder.Services.AddScoped<IReworkReasonDataAccess, ReworkReasonDataAccess>();
+builder.Services.AddScoped<IReworkReasonApplicationService, ReworkReasonApplicationService>();
 
 // Register background service for auto-training ML models
 builder.Services.AddHttpClient();
@@ -174,7 +179,6 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -204,7 +208,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapStaticAssets();
 app.MapControllers();
-
-
 
 app.Run();

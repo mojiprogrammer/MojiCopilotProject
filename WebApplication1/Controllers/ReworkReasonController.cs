@@ -1,5 +1,5 @@
-﻿using DanaCopilot.Application.Modules.Core.Interfaces;
-using DanaCopilot.Contracts.ProductCategory.Requests;
+﻿using DanaCopilot.Application.Modules.RunTime.Interfaces;
+using DanaCopilot.Contracts.ReworkReason.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,11 +8,11 @@ namespace Moji.Controllers.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class ProductCategoriesController : ControllerBase
+    public class ReworkReasonController : ControllerBase
     {
-        private readonly IProductCategoryApplicationService _service;
+        private readonly IReworkReasonApplicationService _service;
 
-        public ProductCategoriesController(IProductCategoryApplicationService service)
+        public ReworkReasonController(IReworkReasonApplicationService service)
         {
             _service = service;
         }
@@ -20,9 +20,7 @@ namespace Moji.Controllers.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _service.GetAllAsync();
-
-            return Ok(result);
+            return Ok(await _service.GetAllAsync());
         }
 
         [HttpGet("{id:long}")]
@@ -30,25 +28,22 @@ namespace Moji.Controllers.Controllers
         {
             var result = await _service.GetByIdAsync(id);
 
-            if (result == null)
+            if (result is null)
                 return NotFound();
 
             return Ok(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateProductCategoryRequest request)
+        public async Task<IActionResult> Create(CreateReworkReasonRequest request)
         {
             var id = await _service.CreateAsync(request);
 
-            return CreatedAtAction(
-                nameof(GetById),
-                new { id },
-                id);
+            return CreatedAtAction(nameof(GetById), new { id }, id);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UpdateProductCategoryRequest request)
+        public async Task<IActionResult> Update(UpdateReworkReasonRequest request)
         {
             await _service.UpdateAsync(request);
 
@@ -56,7 +51,7 @@ namespace Moji.Controllers.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete([FromBody] DeleteProductCategoryRequest request)
+        public async Task<IActionResult> Delete(DeleteReworkReasonRequest request)
         {
             await _service.DeleteAsync(request);
 
