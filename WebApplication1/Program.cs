@@ -81,19 +81,15 @@ builder.Services.AddDbContext<OfflineDbContext>(options =>
 // Register repositories (Original ones)
 builder.Services.AddScoped<IUserRepositoryDataService, UserRepositoryDataService>();
 builder.Services.AddScoped<IUserProfileRepositoryDataService, UserProfileRepositoryDataService>();
-
 builder.Services.AddScoped<IMenuRepositoryDataService, MenuRepositoryDataService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
-
 builder.Services.AddScoped<IUserRoleRepositoryDataService, UserRoleRepositoryDataService>();
 builder.Services.AddScoped<IUserRoleService, UserRoleService>();
-
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IUserProfileService, UserProfileService>();
 builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
-
 builder.Services.AddScoped<IFileUploadHelper, FileUploadHelper>();
 
 //TestLineServices
