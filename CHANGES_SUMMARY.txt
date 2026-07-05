@@ -1,0 +1,33 @@
+DEPENDENCY INJECTION FIX APPLIED
+=================================
+
+ROOT CAUSE:
+-----------
+OEESnapshotBuilderService depends on IOEECalculationService (from RunTime module),
+but the Program.cs only registered IOeeCalculationService (from Oee module - different casing).
+Additionally, IOEESnapshotBuilderService itself, IOEESnapshotDataAccess were not registered.
+
+CHANGES MADE:
+-------------
+In WebApplication1/Program.cs, after line 113 (IOeeCalculationService registration), 
+added three new service registrations:
+
+1. builder.Services.AddScoped<IOEECalculationService, OEECalculationService>();
+   - Registers the RunTime module's OEE calculation service (capital "EE")
+
+2. builder.Services.AddScoped<IOEESnapshotDataAccess, OEESnapshotDataAccess>();
+   - Registers the data access layer for OEE snapshots
+
+3. builder.Services.AddScoped<IOEESnapshotBuilderService, OEESnapshotBuilderService>();
+   - Registers the main service that OEESnapshotBuilderService needs
+
+All necessary using statements were already in place:
+- using DanaCopilot.Application.Modules.RunTime.Interfaces;
+- using DanaCopilot.Application.Modules.RunTime.Services;
+- using DanaCopilot.Infrastructure.DataAccess.Interfaces;
+- using DanaCopilot.Infrastructure.DataAccess.Implements;
+
+EXPECTED OUTCOME:
+-----------------
+When builder.Build() is called on line 175, the dependency validation should now pass
+because all required dependencies will be available in the container.

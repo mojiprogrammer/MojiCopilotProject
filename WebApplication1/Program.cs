@@ -114,9 +114,13 @@ builder.Services.AddScoped<IParameterMappingDataAccess, ParameterMappingDataAcce
 builder.Services.AddScoped<IParameterMappingApplicationService, ParameterMappingApplicationService>();
 builder.Services.AddScoped<IAlarmDefinitionDataAccess, AlarmDefinitionDataAccess>();
 builder.Services.AddScoped<IAlarmDefinitionApplicationService, AlarmDefinitionApplicationService>();
+builder.Services.AddScoped<IParameterValueDataAccess, ParameterValueDataAccess>();
 builder.Services.AddScoped<IAlarmEventDataAccess, AlarmEventDataAccess>();
 builder.Services.AddScoped<IAlarmEventApplicationService, AlarmEventApplicationService>();
 builder.Services.AddScoped<IOeeCalculationService, OeeCalculationService>();
+builder.Services.AddScoped<IOEECalculationService, OEECalculationService>();
+builder.Services.AddScoped<IOEESnapshotDataAccess, OEESnapshotDataAccess>();
+builder.Services.AddScoped<IOEESnapshotBuilderService, OEESnapshotBuilderService>();
 builder.Services.AddScoped<IProductionExecutionDataAccess, ProductionExecutionDataAccess>();
 builder.Services.AddScoped<IProductionExecutionApplicationService, ProductionExecutionApplicationService>();
 builder.Services.AddScoped<IRejectReasonDataAccess, RejectReasonDataAccess>();
@@ -129,6 +133,8 @@ builder.Services.AddScoped<IShiftCalendarDataAccess, ShiftCalendarDataAccess>();
 builder.Services.AddScoped<IShiftApplicationService, ShiftApplicationService>();
 builder.Services.AddScoped<IShiftScheduleApplicationService, ShiftScheduleApplicationService>();
 builder.Services.AddScoped<IShiftCalendarApplicationService, ShiftCalendarApplicationService>();
+builder.Services.AddScoped<IOEESnapshotDataAccess, OEESnapshotDataAccess>();
+
 
 // Register background service for auto-training ML models
 builder.Services.AddHttpClient();
