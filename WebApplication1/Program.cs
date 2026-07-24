@@ -176,7 +176,6 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Initialize database and create SQLite offline database
 using (var scope = app.Services.CreateScope())
 {
     try
