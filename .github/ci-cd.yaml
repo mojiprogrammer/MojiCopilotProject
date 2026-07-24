@@ -1,1 +1,9 @@
-
+run_test:
+   script:
+      - echo "run_testr run"
+run_build:
+    script:
+      - echo "run_build run"
+run_deploy:
+    script:
+       - echo "run_deploy run"
