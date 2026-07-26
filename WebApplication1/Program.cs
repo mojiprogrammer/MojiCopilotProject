@@ -1,3 +1,5 @@
+using DanaCopilot.Application.Commands.User;
+using DanaCopilot.Application.Handlers.Commands.User;
 using DanaCopilot.Application.Modules.Configuration.Interfaces;
 using DanaCopilot.Application.Modules.Configuration.Services;
 using DanaCopilot.Application.Modules.Core.Interfaces;
@@ -9,6 +11,7 @@ using DanaCopilot.Application.Modules.RunTime.Services;
 using DanaCopilot.Infrastructure.Connection;
 using DanaCopilot.Infrastructure.DataAccess.Implements;
 using DanaCopilot.Infrastructure.DataAccess.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -21,6 +24,7 @@ using Moji.Services.Helper;
 using Moji.Services.Helper.Implement;
 using Moji.Services.Interfaces;
 using Moji.Services.Services;
+using System.Reflection;
 using System.Text;
 using TestSystem.Application.Modules.Configuration.Line.Services;
 
@@ -134,7 +138,7 @@ builder.Services.AddScoped<IShiftApplicationService, ShiftApplicationService>();
 builder.Services.AddScoped<IShiftScheduleApplicationService, ShiftScheduleApplicationService>();
 builder.Services.AddScoped<IShiftCalendarApplicationService, ShiftCalendarApplicationService>();
 builder.Services.AddScoped<IOEESnapshotDataAccess, OEESnapshotDataAccess>();
-
+builder.Services.AddMediatR(typeof(UserHandler).GetTypeInfo().Assembly);
 
 // Register background service for auto-training ML models
 builder.Services.AddHttpClient();
