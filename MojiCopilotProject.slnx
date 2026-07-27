@@ -1,5 +1,8 @@
 <Solution>
-  <Folder Name="/Common/" />
+  <Folder Name="/ApiGateway/" />
+  <Folder Name="/Common/">
+    <Project Path="Common/DanaCopilot.Auth/DanaCopilot.Auth.csproj" Id="7ff84f72-1a0c-4e55-87fe-f595875a4451" />
+  </Folder>
   <Project Path="DanaCopilot.Application/DanaCopilot.Application.csproj" Id="216bab6b-6a95-444b-a150-8cbde37616a5" />
   <Project Path="DanaCopilot.Contracts/DanaCopilot.Contracts.csproj" Id="0e56979a-bd75-4245-8b3d-9d45cf603bb9" />
   <Project Path="DanaCopilot.Domain/DanaCopilot.Domain.csproj" Id="0cc795d9-595d-48b2-9d51-fc4f4b6134e7" />

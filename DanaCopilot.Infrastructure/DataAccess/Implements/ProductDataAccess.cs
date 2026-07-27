@@ -2,9 +2,6 @@
 using DanaCopilot.Contracts.Product.Responses;
 using DanaCopilot.Infrastructure.Connection;
 using DanaCopilot.Infrastructure.DataAccess.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DanaCopilot.Infrastructure.DataAccess.Implements
 {

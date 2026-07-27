@@ -1,4 +1,4 @@
-using DanaCopilot.Application.Commands.User;
+using Asp.Versioning;
 using DanaCopilot.Application.Handlers.Commands.User;
 using DanaCopilot.Application.Modules.Configuration.Interfaces;
 using DanaCopilot.Application.Modules.Configuration.Services;
@@ -137,8 +137,25 @@ builder.Services.AddScoped<IShiftCalendarDataAccess, ShiftCalendarDataAccess>();
 builder.Services.AddScoped<IShiftApplicationService, ShiftApplicationService>();
 builder.Services.AddScoped<IShiftScheduleApplicationService, ShiftScheduleApplicationService>();
 builder.Services.AddScoped<IShiftCalendarApplicationService, ShiftCalendarApplicationService>();
-builder.Services.AddScoped<IOEESnapshotDataAccess, OEESnapshotDataAccess>();
+builder.Services.AddScoped<IShiftCalendarApplicationService, ShiftCalendarApplicationService>();
+//builder.Services.AddScoped<IUserCommandRepository, UserCommandRepository>();
 builder.Services.AddMediatR(typeof(UserHandler).GetTypeInfo().Assembly);
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1);
+    options.ReportApiVersions = true;
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ApiVersionReader = ApiVersionReader.Combine(
+        new UrlSegmentApiVersionReader(),
+        new HeaderApiVersionReader("X-Api-Version"));
+})
+.AddMvc() // This is needed for controllers
+.AddApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'V";
+    options.SubstituteApiVersionInUrl = true;
+});
+
 
 // Register background service for auto-training ML models
 builder.Services.AddHttpClient();
