@@ -17,6 +17,7 @@
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
 	</ItemGroup>
 	<ItemGroup>
+	  <ProjectReference Include="..\Common\DanaCopilot.Auth\DanaCopilot.Auth.csproj" />
 	  <ProjectReference Include="..\DanaCopilot.Application\DanaCopilot.Application.csproj" />
 	  <ProjectReference Include="..\DanaCopilot.Infrastructure\DanaCopilot.Infrastructure.csproj" />
 	  <ProjectReference Include="..\Moji.DataService\Moji.DataService.csproj" />

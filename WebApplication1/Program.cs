@@ -155,7 +155,7 @@ builder.Services.AddApiVersioning(options =>
     options.GroupNameFormat = "'v'V";
     options.SubstituteApiVersionInUrl = true;
 });
-
+DanaCopilot.Auth.Extensions.AddJwt(builder.Services, builder.Configuration);
 
 // Register background service for auto-training ML models
 builder.Services.AddHttpClient();
@@ -166,21 +166,21 @@ if (string.IsNullOrEmpty(jwtSecret))
     throw new InvalidOperationException("JWT Secret not configured");
 }
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["AppSettings:Jwt:Issuer"] ?? "DanaAPI",
-            ValidAudience = builder.Configuration["AppSettings:Jwt:Audience"] ?? "DanaClient",
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(jwtSecret))
-        };
-    });
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//    .AddJwtBearer(options =>
+//    {
+//        options.TokenValidationParameters = new TokenValidationParameters
+//        {
+//            ValidateIssuer = true,
+//            ValidateAudience = true,
+//            ValidateLifetime = true,
+//            ValidateIssuerSigningKey = true,
+//            ValidIssuer = builder.Configuration["AppSettings:Jwt:Issuer"] ?? "DanaAPI",
+//            ValidAudience = builder.Configuration["AppSettings:Jwt:Audience"] ?? "DanaClient",
+//            IssuerSigningKey = new SymmetricSecurityKey(
+//                Encoding.UTF8.GetBytes(jwtSecret))
+//        };
+//    });
 
 // CORS
 builder.Services.AddCors(options =>

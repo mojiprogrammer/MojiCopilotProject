@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Common\DanaCopilot.Auth\DanaCopilot.Auth.csproj" />
     <ProjectReference Include="..\DanaCopilot.Contracts\DanaCopilot.Contracts.csproj" />
     <ProjectReference Include="..\DanaCopilot.Domain\DanaCopilot.Domain.csproj" />
     <ProjectReference Include="..\DanaCopilot.Infrastructure\DanaCopilot.Infrastructure.csproj" />
@@ -23,7 +24,6 @@
 
   <ItemGroup>
     <Folder Include="Helpers\" />
-    <Folder Include="Queries\" />
   </ItemGroup>
 
 </Project>
