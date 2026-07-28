@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using DanaCopilot.Application.Commands.Auth;
 using DanaCopilot.Application.Queries.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -21,8 +22,22 @@ namespace Moji.Controllers.Controllers.V1
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] AuthQuery authQuery)
         {
-            var req = await _mediator.Send(authQuery);
-            return Ok(req);
+            var res = await _mediator.Send(authQuery);
+            return Ok(res);
+        }
+
+        [HttpPost("SendOtp")]
+        public async Task<IActionResult> RegisterAndSendOtp([FromBody] AuthCommand authcommand)
+        {
+            var res = await _mediator.Send(authcommand);
+            return Ok(res);
+        }
+
+        [HttpPost("VerifyOtp")]
+        public async Task<IActionResult> VerifyOtp([FromBody] AuthCommand authcommand)
+        {
+            var res = await _mediator.Send(authcommand);
+            return Ok(res);
         }
     }
 }

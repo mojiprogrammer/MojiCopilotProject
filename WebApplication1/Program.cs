@@ -8,7 +8,9 @@ using DanaCopilot.Application.Modules.Oee.Interfaces;
 using DanaCopilot.Application.Modules.Oee.Services;
 using DanaCopilot.Application.Modules.RunTime.Interfaces;
 using DanaCopilot.Application.Modules.RunTime.Services;
+using DanaCopilot.Domain.Interfaces.Command;
 using DanaCopilot.Infrastructure.Connection;
+using DanaCopilot.Infrastructure.DataAccess.Command;
 using DanaCopilot.Infrastructure.DataAccess.Implements;
 using DanaCopilot.Infrastructure.DataAccess.Interfaces;
 using MediatR;
@@ -138,6 +140,7 @@ builder.Services.AddScoped<IShiftApplicationService, ShiftApplicationService>();
 builder.Services.AddScoped<IShiftScheduleApplicationService, ShiftScheduleApplicationService>();
 builder.Services.AddScoped<IShiftCalendarApplicationService, ShiftCalendarApplicationService>();
 builder.Services.AddScoped<IShiftCalendarApplicationService, ShiftCalendarApplicationService>();
+builder.Services.AddScoped<IOtpRedisRepository, OtpRedisRepository>();
 //builder.Services.AddScoped<IUserCommandRepository, UserCommandRepository>();
 builder.Services.AddMediatR(typeof(UserHandler).GetTypeInfo().Assembly);
 builder.Services.AddApiVersioning(options =>
@@ -156,6 +159,11 @@ builder.Services.AddApiVersioning(options =>
     options.SubstituteApiVersionInUrl = true;
 });
 DanaCopilot.Auth.Extensions.AddJwt(builder.Services, builder.Configuration);
+
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetValue<string>("CachSetting:RedisUrl");
+});
 
 // Register background service for auto-training ML models
 builder.Services.AddHttpClient();
