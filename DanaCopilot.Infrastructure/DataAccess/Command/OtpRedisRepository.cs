@@ -23,17 +23,25 @@ namespace DanaCopilot.Infrastructure.DataAccess.Command
             //TODO set entity
             return true;
         }
+        public async Task<Otp> GetData(string mobileNo)
+        {
+            var data = _distributedCache.GetString(mobileNo);
+            if (data == null) return null;
+            var otpObj = JsonConvert.DeserializeObject<Otp>(data);
+
+            return otpObj;
+        }
 
         public async Task<bool> Insert(Otp entity)
         {
-            int time=Convert.ToInt32(_configuration.GetSection("Otp:OtpTime").Value);
-            _distributedCache.SetString(entity.UserId.ToString(),JsonConvert.SerializeObject(entity),new DistributedCacheEntryOptions()
+            int time = Convert.ToInt32(_configuration.GetSection("Otp:OtpTime").Value);
+            _distributedCache.SetString(entity.UserId.ToString(), JsonConvert.SerializeObject(entity), new DistributedCacheEntryOptions()
                 .SetSlidingExpiration(TimeSpan.FromMinutes(time))
                 .SetAbsoluteExpiration(TimeSpan.FromMinutes(time)));
 
             //TODO set entity
             return true;
-            
+
         }
 
         public Task<bool> Update(Otp entity)

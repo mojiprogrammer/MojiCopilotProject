@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DanaCopilot.Contracts\DanaCopilot.Contracts.csproj" />
     <ProjectReference Include="..\DanaCopilot.Domain\DanaCopilot.Domain.csproj" />
+    <ProjectReference Include="..\Moji.DataService\Moji.DataService.csproj" />
   </ItemGroup>
 
 </Project>
