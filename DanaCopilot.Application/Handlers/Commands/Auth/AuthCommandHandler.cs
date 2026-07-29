@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using DanaCopilot.Application.Commands.Auth;
 using DanaCopilot.Domain.DTOs;
-using DanaCopilot.Domain.Entities;
 using DanaCopilot.Domain.Interfaces.Command;
+using DotNetCore.CAP;
 using MediatR;
 
 namespace DanaCopilot.Application.Handlers.Commands.Auth
@@ -10,13 +10,15 @@ namespace DanaCopilot.Application.Handlers.Commands.Auth
     public class AuthCommandHandler : IRequestHandler<AuthCommand, bool>
     {
         private readonly IOtpRedisRepository _otpRedisRepository;
-        private readonly IUserCommandRepository _userCommandRepository;
+        //private readonly IUserCommandRepository _userCommandRepository;
         private readonly IMapper _mapper;
-        public AuthCommandHandler(IOtpRedisRepository otpRedisRepository, IUserCommandRepository userCommandRepository,IMapper mapper)
+        private readonly ICapPublisher _capBus;
+        public AuthCommandHandler(IOtpRedisRepository otpRedisRepository, IUserCommandRepository userCommandRepository,IMapper mapper,ICapPublisher capBus)
         {
             _otpRedisRepository = otpRedisRepository;
-            _userCommandRepository = userCommandRepository;
+            //_userCommandRepository = userCommandRepository;
             _mapper = mapper;
+            _capBus = capBus;
 
         }
         public async Task<bool> Handle(AuthCommand request, CancellationToken cancellationToken)
@@ -32,6 +34,11 @@ namespace DanaCopilot.Application.Handlers.Commands.Auth
 
             //    throw;
             //}
+            //Send pm to Notif Service
+            await _capBus.PublishAsync<AuthCommand>("otpevent", new AuthCommand
+            {
+                MobileNo = request.MobileNo
+            });
             await _otpRedisRepository.Insert(new Otp { UserId = 1, OtpCode = "3265", IsUse = false });
            // TODO main logic
             return true;

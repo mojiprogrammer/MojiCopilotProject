@@ -9,10 +9,12 @@ using DanaCopilot.Application.Modules.Oee.Services;
 using DanaCopilot.Application.Modules.RunTime.Interfaces;
 using DanaCopilot.Application.Modules.RunTime.Services;
 using DanaCopilot.Domain.Interfaces.Command;
+using DanaCopilot.EventMessages.Events;
 using DanaCopilot.Infrastructure.Connection;
 using DanaCopilot.Infrastructure.DataAccess.Command;
 using DanaCopilot.Infrastructure.DataAccess.Implements;
 using DanaCopilot.Infrastructure.DataAccess.Interfaces;
+using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -158,6 +160,43 @@ builder.Services.AddApiVersioning(options =>
     options.GroupNameFormat = "'v'V";
     options.SubstituteApiVersionInUrl = true;
 });
+builder.Services.AddCap(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DanaCopilotConnection"));
+    options.UseDashboard(path => path.PathMatch = "/cap");
+    options.UseRabbitMQ(options =>
+    {
+        //TODO Should be Move to appsetting
+        options.HostName = "localhost";
+        options.UserName = "guest";
+        options.Password = "guest";
+        options.Port = 5672;
+    });
+    options.FailedRetryCount = 10;
+    options.FailedRetryInterval = 5;
+
+});
+//builder.Services.AddMassTransit(x =>
+//{
+//    x.AddConsumer<OrderCreatedConsumer>();
+
+//    x.AddEntityFrameworkOutbox<AppDbContext>(o =>
+//    {
+//        o.UseSqlServer();
+//        o.UseBusOutbox();
+//    });
+
+//    x.UsingRabbitMq((context, cfg) =>
+//    {
+//        cfg.Host("localhost", "/", h =>
+//        {
+//            h.Username("guest");
+//            h.Password("guest");
+//        });
+
+//        cfg.ConfigureEndpoints(context);
+//    });
+//});
 DanaCopilot.Auth.Extensions.AddJwt(builder.Services, builder.Configuration);
 
 builder.Services.AddStackExchangeRedisCache(options =>

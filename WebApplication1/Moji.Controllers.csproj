@@ -10,6 +10,14 @@
 		<PackageReference Include="Asp.Versioning.Http" Version="10.0.0" />
 		<PackageReference Include="Asp.Versioning.Mvc" Version="10.0.0" />
 		<PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="10.0.0" />
+		<PackageReference Include="DotNetCore.CAP" Version="10.0.1" />
+		<PackageReference Include="DotNetCore.CAP.Dashboard" Version="10.0.1" />
+		<PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="10.0.1" />
+		<PackageReference Include="DotNetCore.CAP.SqlServer" Version="10.0.1" />
+		<PackageReference Include="MassTransit" Version="9.2.0" />
+		<PackageReference Include="MassTransit.EntityFrameworkCore" Version="9.2.0" />
+		<PackageReference Include="MassTransit.RabbitMQ" Version="9.2.0" />
+		<PackageReference Include="MassTransit.SqlTransport.SqlServer" Version="9.2.0" />
 		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.0" />
@@ -19,6 +27,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\Common\DanaCopilot.Auth\DanaCopilot.Auth.csproj" />
 	  <ProjectReference Include="..\DanaCopilot.Application\DanaCopilot.Application.csproj" />
+	  <ProjectReference Include="..\DanaCopilot.BaseEvent\DanaCopilot.EventMessages.csproj" />
 	  <ProjectReference Include="..\DanaCopilot.Infrastructure\DanaCopilot.Infrastructure.csproj" />
 	  <ProjectReference Include="..\Moji.DataService\Moji.DataService.csproj" />
 	  <ProjectReference Include="..\Moji.Services\Moji.Services.csproj" />
