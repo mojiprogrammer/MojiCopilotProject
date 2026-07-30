@@ -26,5 +26,9 @@
     <ProjectReference Include="..\DanaCopilot.Domain\DanaCopilot.Domain.csproj" />
     <ProjectReference Include="..\DanaCopilot.Infrastructure\DanaCopilot.Infrastructure.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Protobuf Include="Protos\User.proto" GrpcServices="Server" />
+  </ItemGroup>
 
 </Project>

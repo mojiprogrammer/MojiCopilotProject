@@ -1,4 +1,5 @@
 using Asp.Versioning;
+using DanaCopilot.Application.GrpcServices;
 using DanaCopilot.Application.Handlers.Commands.User;
 using DanaCopilot.Application.Modules.Configuration.Interfaces;
 using DanaCopilot.Application.Modules.Configuration.Services;
@@ -145,6 +146,7 @@ builder.Services.AddScoped<IShiftCalendarApplicationService, ShiftCalendarApplic
 builder.Services.AddScoped<IOtpRedisRepository, OtpRedisRepository>();
 //builder.Services.AddScoped<IUserCommandRepository, UserCommandRepository>();
 builder.Services.AddMediatR(typeof(UserHandler).GetTypeInfo().Assembly);
+builder.Services.AddGrpc();
 builder.Services.AddApiVersioning(options =>
 {
     options.DefaultApiVersion = new ApiVersion(1);
@@ -287,5 +289,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapStaticAssets();
 app.MapControllers();
-
+app.MapGrpcService<UserGrpcService>();
 app.Run();
