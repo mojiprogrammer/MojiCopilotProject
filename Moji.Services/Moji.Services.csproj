@@ -22,8 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\Telegram\" />
-    <Folder Include="MLServices\" />
     <Folder Include="Models\UserPermissions\" />
   </ItemGroup>
 

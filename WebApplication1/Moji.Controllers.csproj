@@ -14,6 +14,13 @@
 		<PackageReference Include="DotNetCore.CAP.Dashboard" Version="10.0.1" />
 		<PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="10.0.1" />
 		<PackageReference Include="DotNetCore.CAP.SqlServer" Version="10.0.1" />
+		<PackageReference Include="Google.Protobuf" Version="3.35.1" />
+		<PackageReference Include="Grpc" Version="2.46.6" />
+		<PackageReference Include="Grpc.AspNetCore" Version="2.80.0" />
+		<PackageReference Include="Grpc.Tools" Version="2.83.0">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="MassTransit" Version="9.2.0" />
 		<PackageReference Include="MassTransit.EntityFrameworkCore" Version="9.2.0" />
 		<PackageReference Include="MassTransit.RabbitMQ" Version="9.2.0" />

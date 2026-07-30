@@ -10,6 +10,12 @@
     <PackageReference Include="AutoMapper" Version="16.2.0" />
     <PackageReference Include="Dapper" Version="2.1.79" />
     <PackageReference Include="DotNetCore.CAP" Version="10.0.1" />
+    <PackageReference Include="Google.Protobuf" Version="3.35.1" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.80.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.83.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.9" />
   </ItemGroup>
